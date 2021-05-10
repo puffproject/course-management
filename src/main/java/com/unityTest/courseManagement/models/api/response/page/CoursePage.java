@@ -1,4 +1,4 @@
-package com.unityTest.courseManagement.models;
+package com.unityTest.courseManagement.models.api.response.page;
 
 import com.unityTest.courseManagement.entity.Course;
 import io.swagger.annotations.ApiModel;

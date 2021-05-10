@@ -2,8 +2,8 @@ package com.unityTest.courseManagement.restApi;
 
 import com.unityTest.courseManagement.entity.Course;
 import com.unityTest.courseManagement.entity.CourseAttribute;
-import com.unityTest.courseManagement.models.CourseAttributePage;
-import com.unityTest.courseManagement.models.CoursePage;
+import com.unityTest.courseManagement.models.api.response.page.CourseAttributePage;
+import com.unityTest.courseManagement.models.api.response.page.CoursePage;
 import io.swagger.annotations.*;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;

@@ -2,8 +2,8 @@ package com.unityTest.courseManagement.restImpl;
 
 import com.unityTest.courseManagement.entity.Course;
 import com.unityTest.courseManagement.entity.CourseAttribute;
-import com.unityTest.courseManagement.models.CourseAttributePage;
-import com.unityTest.courseManagement.models.CoursePage;
+import com.unityTest.courseManagement.models.api.response.page.CourseAttributePage;
+import com.unityTest.courseManagement.models.api.response.page.CoursePage;
 import com.unityTest.courseManagement.models.Term;
 import com.unityTest.courseManagement.restApi.CourseApi;
 import com.unityTest.courseManagement.service.CourseService;
