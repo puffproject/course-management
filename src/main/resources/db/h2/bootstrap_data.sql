@@ -11,12 +11,15 @@ VALUES
 
 INSERT INTO COURSE_ATTR (ID, COURSE_ID, ATTR_NAME, ATTR_VALUE)
 VALUES
-(1, 1, 'PROFESSOR_NAME', 'William M. Farmer'),
-(2, 1, 'TITLE', 'Introduction to Computational Thinking'),
+(1, 1, 'professorName', 'William M. Farmer'),
+(2, 1, 'title', 'Introduction to Computational Thinking'),
+(3, 1, 'description', 'Monads, Inverse functions, Lambda algebra, Clock arithmetic, Computational keys.'),
+(4, 1, 'sections', 'C01, C02'),
+(5, 1, 'weight', '3 units'),
+(6, 1, 'prerequisites', 'COMPSCI 2CO3, COMPSCI 2FA3'),
 
-(3, 2, 'PROFESSOR_NAME', 'George Fizherbert'),
-(4, 2, 'TITLE', 'Introduction to Programming'),
+(7, 2, 'professorName', 'George Fizherbert'),
+(8, 2, 'title', 'Introduction to Programming'),
 
-(5, 3, 'PROFESSOR_NAME', 'Curtis D''Alves'),
-(6, 3, 'TITLE', 'Practice and Expertise');
-
+(9, 3, 'professorName', 'Curtis D''Alves'),
+(10, 3, 'title', 'Practice and Expertise');
