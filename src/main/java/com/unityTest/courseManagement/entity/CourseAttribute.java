@@ -1,6 +1,7 @@
 package com.unityTest.courseManagement.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.unityTest.courseManagement.models.CourseAttributeName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -25,6 +26,7 @@ public class CourseAttribute {
 
     @Id
     @Column(name = "Id")
+    @JsonIgnore
     @GeneratedValue(generator = "sequence-generator")
     @GenericGenerator(
             name = "sequence-generator",
@@ -44,9 +46,10 @@ public class CourseAttribute {
 
     // Attribute name
     @ApiModelProperty(value = "Course attribute name", required = true, example = "professorName")
-    @NotBlank
+    @Enumerated(EnumType.STRING)
+    @NotNull
     @Column(name = "ATTR_NAME")
-    private String name;
+    private CourseAttributeName name;
 
     // Attribute value
     @ApiModelProperty(value = "Course attribute value", required = true, example = "William M. Farmer")
