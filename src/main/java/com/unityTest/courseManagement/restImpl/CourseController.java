@@ -7,7 +7,7 @@ import com.unityTest.courseManagement.models.api.response.CourseAttributeView;
 import com.unityTest.courseManagement.models.api.response.page.CoursePage;
 import com.unityTest.courseManagement.models.Term;
 import com.unityTest.courseManagement.restApi.CourseApi;
-import com.unityTest.courseManagement.serviceImpl.CourseService;
+import com.unityTest.courseManagement.service.CourseService;
 
 import com.unityTest.courseManagement.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
