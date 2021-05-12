@@ -2,7 +2,7 @@ package com.unityTest.courseManagement.restApi;
 
 import com.unityTest.courseManagement.entity.Course;
 import com.unityTest.courseManagement.entity.CourseAttribute;
-import com.unityTest.courseManagement.models.api.response.page.CourseAttributePage;
+import com.unityTest.courseManagement.models.api.response.CourseAttributeView;
 import com.unityTest.courseManagement.models.api.response.page.CoursePage;
 import io.swagger.annotations.*;
 import org.springframework.data.domain.Pageable;
@@ -66,23 +66,21 @@ public interface CourseApi extends BaseApi {
 
     /**
      * GET endpoint to retrieve attributes for a course
-     * @return List of attributes for a course
+     * @return Collection of attributes for a course
      */
-    @ApiOperation(value = "Get attributes for a course", nickname = "getCourseAttrs", response = CourseAttributePage.class, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Get attributes for a course", nickname = "getCourseAttrs", response = CourseAttributeView.class, produces = MediaType.APPLICATION_JSON_VALUE)
     @GetMapping(value = "/{courseId}/attr", produces = MediaType.APPLICATION_JSON_VALUE)
-    ResponseEntity<CourseAttributePage> getCourseAttrs(
-            Pageable pageable,
-            @ApiParam(value = "course id", required = true) @PathVariable(value = "courseId") Integer courseId,
-            @ApiParam("Attribute id") @RequestParam(value = "id", required = false) Integer id,
-            @ApiParam("Attribute name") @RequestParam(value = "name", required = false) String name
-    );
+    ResponseEntity<CourseAttributeView> getCourseAttrs(@ApiParam(value = "Course id", required = true) @PathVariable(value = "courseId") Integer courseId);
 
     /**
      * DELETE endpoint to delete a course attribute
-     * @param attributeId Id of course attribute to delete
+     * @param courseId Id of course attribute belongs to
+     * @param attributeName Name of attribute to delete
      */
     @ApiOperation(value = "Delete a course attribute", nickname = "deleteCourseAttr")
     @ResponseStatus(code = HttpStatus.NO_CONTENT)
-    @DeleteMapping(value = "/attr/{attributeId}")
-    void deleteCourseAttr(@ApiParam(value = "Course attribute id", required = true) @PathVariable(value = "attributeId") Integer attributeId);
+    @DeleteMapping(value = "/{courseId}/attr/{attributeName}")
+    void deleteCourseAttr(
+            @ApiParam(value = "Course id", required = true) @PathVariable(value = "courseId") Integer courseId,
+            @ApiParam(value = "Course attribute name", required = true) @PathVariable(value = "attributeName") String attributeName);
 }

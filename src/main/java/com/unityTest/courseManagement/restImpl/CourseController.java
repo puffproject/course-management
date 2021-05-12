@@ -2,12 +2,14 @@ package com.unityTest.courseManagement.restImpl;
 
 import com.unityTest.courseManagement.entity.Course;
 import com.unityTest.courseManagement.entity.CourseAttribute;
-import com.unityTest.courseManagement.models.api.response.page.CourseAttributePage;
+import com.unityTest.courseManagement.models.CourseAttributeName;
+import com.unityTest.courseManagement.models.api.response.CourseAttributeView;
 import com.unityTest.courseManagement.models.api.response.page.CoursePage;
 import com.unityTest.courseManagement.models.Term;
 import com.unityTest.courseManagement.restApi.CourseApi;
-import com.unityTest.courseManagement.service.CourseService;
+import com.unityTest.courseManagement.serviceImpl.CourseService;
 
+import com.unityTest.courseManagement.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -16,6 +18,7 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.RolesAllowed;
+import java.util.List;
 
 /**
  * Rest Controller for the /course endpoint
@@ -61,14 +64,21 @@ public class CourseController implements CourseApi {
     }
 
     @Override
-    public ResponseEntity<CourseAttributePage> getCourseAttrs(Pageable pageable, Integer courseId, Integer id, String name) {
-        CourseAttributePage page = new CourseAttributePage(courseService.getCourseAttributes(pageable, id, courseId, name));
-        return new ResponseEntity<>(page, HttpStatus.OK);
+    public ResponseEntity<CourseAttributeView> getCourseAttrs(Integer courseId) {
+        // Get all attributes for the course
+        List<CourseAttribute> attributes = courseService.getCourseAttributes(null, courseId, null);
+        // Build CourseAttributeView to return
+        CourseAttributeView response = new CourseAttributeView(attributes);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @Override
     @RolesAllowed("ROLE_ADMIN")
-    public void deleteCourseAttr(Integer attributeId) {
-        courseService.deleteCourseAttr(attributeId);
+    public void deleteCourseAttr(Integer courseId, String attributeName) {
+        // Parse attribute name
+        CourseAttributeName name = Utils.parseToEnum(attributeName, CourseAttributeName.class);
+        // Get matching attributes and delete them
+        List<CourseAttribute> attributes = courseService.getCourseAttributes(null, courseId, name);
+        attributes.forEach(a -> courseService.deleteCourseAttr(a.getId()));
     }
 }
