@@ -3,18 +3,15 @@ package com.unityTest.courseManagement.service;
 import com.unityTest.courseManagement.entity.Course;
 import com.unityTest.courseManagement.entity.CourseAttribute;
 import com.unityTest.courseManagement.exception.ElementNotFoundException;
+import com.unityTest.courseManagement.models.CourseAttributeName;
 import com.unityTest.courseManagement.models.Term;
 import com.unityTest.courseManagement.repository.CourseAttrRepository;
 import com.unityTest.courseManagement.repository.CourseRepository;
-import com.unityTest.courseManagement.serviceImpl.CourseService;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.AdditionalAnswers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -67,7 +64,7 @@ class CourseServiceTests {
         courseList.add(course);
 
         // Setup course attribute
-        courseAttribute = new CourseAttribute(1, 1, "TEST_NAME", "TEST VALUE");
+        courseAttribute = new CourseAttribute(1, 1, CourseAttributeName.title, "TEST VALUE");
         // Setup course attribute list
         courseAttributeList = new ArrayList<>();
         courseAttributeList.add(courseAttribute);
@@ -118,7 +115,7 @@ class CourseServiceTests {
     void getCourseAttributes_Valid_ReturnCourseAttributeList() {
         Page<CourseAttribute> page = new PageImpl<>(courseAttributeList);
         when(this.courseAttrRepository.findAll(any(Specification.class), any(Pageable.class))).thenReturn(page);
-        assertEquals(courseAttributeList, courseService.getCourseAttributes(1, 1, "TEST_NAME"));
+        assertEquals(courseAttributeList, courseService.getCourseAttributes(1, 1, CourseAttributeName.title));
     }
 
     @Test

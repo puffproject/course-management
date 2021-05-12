@@ -76,7 +76,13 @@ public class CourseController implements CourseApi {
     @RolesAllowed("ROLE_ADMIN")
     public void deleteCourseAttr(Integer courseId, String attributeName) {
         // Parse attribute name
-        CourseAttributeName name = Utils.parseToEnum(attributeName, CourseAttributeName.class);
+        CourseAttributeName name;
+        try {
+            name = Utils.parseToEnum(attributeName, CourseAttributeName.class);
+        } catch (IllegalArgumentException e) {
+            throw new HttpMessageNotReadableException("Not one of allowed values of CourseAttributeName.");
+        }
+
         // Get matching attributes and delete them
         List<CourseAttribute> attributes = courseService.getCourseAttributes(null, courseId, name);
         attributes.forEach(a -> courseService.deleteCourseAttr(a.getId()));
