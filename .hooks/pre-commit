@@ -9,8 +9,11 @@
 
 set -e
 
+# Get the root of the project
+BASE_DIR="$(git rev-parse --show-toplevel)"
+
 # Run formatter to format files before commit
-mvn formatter:format &>/dev/null
+mvn -f "$BASE_DIR/pom.xml" formatter:format &>/dev/null
 
 # Find all files staged for commit
 filesStagedForCommit="$(git diff --name-only --cached)"
