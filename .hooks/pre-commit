@@ -15,7 +15,7 @@ mvn formatter:format &>/dev/null
 # Find all files staged for commit
 filesStagedForCommit="$(git diff --name-only --cached)"
 
-# Add all files back in case any where changed by formatter
+# Add all files back in case any were changed by formatter
 for file in $filesStagedForCommit
 do
     git add $file
