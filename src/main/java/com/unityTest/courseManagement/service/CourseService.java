@@ -22,137 +22,153 @@ import java.util.Optional;
 @Service
 public class CourseService {
 
-    @Autowired
-    private CourseRepository courseRepository;
+	@Autowired
+	private CourseRepository courseRepository;
 
-    @Autowired
-    private CourseAttrRepository courseAttrRepository;
+	@Autowired
+	private CourseAttrRepository courseAttrRepository;
 
-    /**
-     * Create or update a course
-     *
-     * @param course Course to create or update
-     * @return Course created
-     */
-    public Course createCourse(Course course) {
-        return courseRepository.save(course);
-    }
+	/**
+	 * Create or update a course
+	 *
+	 * @param course Course to create or update
+	 * @return Course created
+	 */
+	public Course createCourse(Course course) {
+		return courseRepository.save(course);
+	}
 
-    /**
-     * Get a list of courses that match the passed arguments
-     *
-     * @param id           Id of course to fetch
-     * @param code         Course code to match
-     * @param level        Course level to match
-     * @param term         Course term to match
-     * @param academicYear Course academic year to match
-     * @return List of courses with fields matching the passed arguments
-     */
-    public List<Course> getCourses(Integer id, String code, Integer level, Term term, Integer academicYear) {
-        return getCourses(Pageable.unpaged(), id, code, level, term, academicYear).getContent();
-    }
+	/**
+	 * Get a list of courses that match the passed arguments
+	 *
+	 * @param id Id of course to fetch
+	 * @param code Course code to match
+	 * @param level Course level to match
+	 * @param term Course term to match
+	 * @param academicYear Course academic year to match
+	 * @return List of courses with fields matching the passed arguments
+	 */
+	public List<Course> getCourses(Integer id, String code, Integer level, Term term, Integer academicYear) {
+		return getCourses(Pageable.unpaged(), id, code, level, term, academicYear).getContent();
+	}
 
-    /**
-     * Get a Page view of courses that match the passed arguments
-     *
-     * @param pageable     Pageable object specifying page size, sort and index
-     * @param id           Id of course to fetch
-     * @param code         Course code to match
-     * @param level        Course level to match
-     * @param term         Course term to match
-     * @param academicYear Course academic year to match
-     * @return Page view of courses from repository matching passed arguments and formatted using the pageable param
-     */
-    public Page<Course> getCourses(Pageable pageable, Integer id, String code, Integer level, Term term, Integer academicYear) {
-        Specification<Course> spec = new AndSpecification<Course>()
-                .equal(id, Course_.ID)
-                .equal(code, Course_.CODE)
-                .equal(level, Course_.LEVEL)
-                .equal(term, Course_.TERM)
-                .equal(academicYear, Course_.ACADEMIC_YEAR).getSpec();
-        return courseRepository.findAll(spec, pageable);
-    }
+	/**
+	 * Get a Page view of courses that match the passed arguments
+	 *
+	 * @param pageable Pageable object specifying page size, sort and index
+	 * @param id Id of course to fetch
+	 * @param code Course code to match
+	 * @param level Course level to match
+	 * @param term Course term to match
+	 * @param academicYear Course academic year to match
+	 * @return Page view of courses from repository matching passed arguments and formatted using the
+	 *         pageable param
+	 */
+	public Page<Course> getCourses(
+			Pageable pageable,
+			Integer id,
+			String code,
+			Integer level,
+			Term term,
+			Integer academicYear) {
+		Specification<Course> spec = new AndSpecification<Course>()
+			.equal(id, Course_.ID)
+			.equal(code, Course_.CODE)
+			.equal(level, Course_.LEVEL)
+			.equal(term, Course_.TERM)
+			.equal(academicYear, Course_.ACADEMIC_YEAR)
+			.getSpec();
+		return courseRepository.findAll(spec, pageable);
+	}
 
-    /**
-     * Finds and returns a course by its id
-     *
-     * @param id Id of course to find
-     * @return Course with matching id from JPA repository
-     * @throws ElementNotFoundException if no course with matching id can be found
-     */
-    public Course getCourseById(int id) throws ElementNotFoundException {
-        Optional<Course> opt = courseRepository.findById(id);
-        // Throw exception if element for id does not exist
-        if (!opt.isPresent()) throw new ElementNotFoundException(Course.class, "id", String.valueOf(id));
-        return opt.get();
-    }
+	/**
+	 * Finds and returns a course by its id
+	 *
+	 * @param id Id of course to find
+	 * @return Course with matching id from JPA repository
+	 * @throws ElementNotFoundException if no course with matching id can be found
+	 */
+	public Course getCourseById(int id) throws ElementNotFoundException {
+		Optional<Course> opt = courseRepository.findById(id);
+		// Throw exception if element for id does not exist
+		if (!opt.isPresent())
+			throw new ElementNotFoundException(Course.class, "id", String.valueOf(id));
+		return opt.get();
+	}
 
-    /**
-     * Delete a course
-     *
-     * @param id Id of course to delete
-     */
-    public void deleteCourse(int id) {
-        courseRepository.deleteById(id);
-    }
+	/**
+	 * Delete a course
+	 *
+	 * @param id Id of course to delete
+	 */
+	public void deleteCourse(int id) {
+		courseRepository.deleteById(id);
+	}
 
-    /**
-     * Create or update an attribute for a course
-     *
-     * @param attribute CourseAttribute to create
-     * @return CourseAttribute created
-     */
-    public CourseAttribute createCourseAttr(CourseAttribute attribute) {
-        // Check if attribute already exists
-        Specification<CourseAttribute> spec = new AndSpecification<CourseAttribute>()
-                .equal(attribute.getCourseId(), CourseAttribute_.COURSE_ID)
-                .equal(attribute.getName(), CourseAttribute_.NAME).getSpec();
-        Optional<CourseAttribute> opt = courseAttrRepository.findOne(spec);
-        // Overwrite value of existing attribute
-        if (opt.isPresent()) {
-            CourseAttribute existingAttribute = opt.get();
-            existingAttribute.setValue(attribute.getValue());
-            return courseAttrRepository.save(existingAttribute);
-        }
-        // Otherwise, create a new attribute
-        return courseAttrRepository.save(attribute);
-    }
+	/**
+	 * Create or update an attribute for a course
+	 *
+	 * @param attribute CourseAttribute to create
+	 * @return CourseAttribute created
+	 */
+	public CourseAttribute createCourseAttr(CourseAttribute attribute) {
+		// Check if attribute already exists
+		Specification<CourseAttribute> spec = new AndSpecification<CourseAttribute>()
+			.equal(attribute.getCourseId(), CourseAttribute_.COURSE_ID)
+			.equal(attribute.getName(), CourseAttribute_.NAME)
+			.getSpec();
+		Optional<CourseAttribute> opt = courseAttrRepository.findOne(spec);
+		// Overwrite value of existing attribute
+		if (opt.isPresent()) {
+			CourseAttribute existingAttribute = opt.get();
+			existingAttribute.setValue(attribute.getValue());
+			return courseAttrRepository.save(existingAttribute);
+		}
+		// Otherwise, create a new attribute
+		return courseAttrRepository.save(attribute);
+	}
 
-    /**
-     * Get a list of course attributes that match the passed arguments
-     *
-     * @param id       Id of CourseAttribute to find
-     * @param courseId CourseAttribute courseId to match
-     * @param name     CourseAttributeName to match
-     * @return List of course attributes with fields matching the passed arguments
-     */
-    public List<CourseAttribute> getCourseAttributes(Integer id, Integer courseId, CourseAttributeName name) {
-        return getCourseAttributes(Pageable.unpaged(), id, courseId, name).getContent();
-    }
+	/**
+	 * Get a list of course attributes that match the passed arguments
+	 *
+	 * @param id Id of CourseAttribute to find
+	 * @param courseId CourseAttribute courseId to match
+	 * @param name CourseAttributeName to match
+	 * @return List of course attributes with fields matching the passed arguments
+	 */
+	public List<CourseAttribute> getCourseAttributes(Integer id, Integer courseId, CourseAttributeName name) {
+		return getCourseAttributes(Pageable.unpaged(), id, courseId, name).getContent();
+	}
 
-    /**
-     * Get a Page view of course attributes that match the passed arguments
-     *
-     * @param pageable Pageable object specifying page size, sort and index
-     * @param id       Id of CourseAttribute to find
-     * @param courseId CourseAttribute courseId to match
-     * @param name     CourseAttributeName to match
-     * @return Page view of course attributes from repository matching passed arguments and formatted using the pageable param
-     */
-    public Page<CourseAttribute> getCourseAttributes(Pageable pageable, Integer id, Integer courseId, CourseAttributeName name) {
-        Specification<CourseAttribute> spec = new AndSpecification<CourseAttribute>()
-                .equal(id, CourseAttribute_.ID)
-                .equal(courseId, CourseAttribute_.COURSE_ID)
-                .equal(name, CourseAttribute_.NAME).getSpec();
-        return courseAttrRepository.findAll(spec, pageable);
-    }
+	/**
+	 * Get a Page view of course attributes that match the passed arguments
+	 *
+	 * @param pageable Pageable object specifying page size, sort and index
+	 * @param id Id of CourseAttribute to find
+	 * @param courseId CourseAttribute courseId to match
+	 * @param name CourseAttributeName to match
+	 * @return Page view of course attributes from repository matching passed arguments and formatted
+	 *         using the pageable param
+	 */
+	public Page<CourseAttribute> getCourseAttributes(
+			Pageable pageable,
+			Integer id,
+			Integer courseId,
+			CourseAttributeName name) {
+		Specification<CourseAttribute> spec = new AndSpecification<CourseAttribute>()
+			.equal(id, CourseAttribute_.ID)
+			.equal(courseId, CourseAttribute_.COURSE_ID)
+			.equal(name, CourseAttribute_.NAME)
+			.getSpec();
+		return courseAttrRepository.findAll(spec, pageable);
+	}
 
-    /**
-     * Delete a course attribute
-     *
-     * @param id Id of course attribute to delete
-     */
-    public void deleteCourseAttr(int id) {
-        courseAttrRepository.deleteById(id);
-    }
+	/**
+	 * Delete a course attribute
+	 *
+	 * @param id Id of course attribute to delete
+	 */
+	public void deleteCourseAttr(int id) {
+		courseAttrRepository.deleteById(id);
+	}
 }

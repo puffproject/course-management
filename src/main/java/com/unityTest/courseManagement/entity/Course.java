@@ -25,44 +25,41 @@ import javax.validation.constraints.NotNull;
 @Table(name = "COURSE")
 public class Course {
 
-    @Id
-    @Column(name = "ID")
-    @GeneratedValue(generator = "sequence-generator")
-    @GenericGenerator(
-            name = "sequence-generator",
-            strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator",
-            parameters = {
-                    @org.hibernate.annotations.Parameter(name = "sequence_name", value = "COURSE_SEQUENCE"),
-                    @org.hibernate.annotations.Parameter(name = "initial_value", value = "1000"),
-                    @org.hibernate.annotations.Parameter(name = "increment_size", value = "1")
-            }
-    )
-    private int id;
+	@Id
+	@Column(name = "ID")
+	@GeneratedValue(generator = "sequence-generator")
+	@GenericGenerator(
+		name = "sequence-generator",
+		strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator",
+		parameters = {@org.hibernate.annotations.Parameter(name = "sequence_name", value = "COURSE_SEQUENCE"),
+			@org.hibernate.annotations.Parameter(name = "initial_value", value = "1000"),
+			@org.hibernate.annotations.Parameter(name = "increment_size", value = "1")})
+	private int id;
 
-    // Course code
-    @ApiModelProperty(value = "Course code", required = true, example = "COMPSCI 1JC3")
-    @NotBlank
-    @Column(name = "CODE")
-    private String code;
+	// Course code
+	@ApiModelProperty(value = "Course code", required = true, example = "COMPSCI 1JC3")
+	@NotBlank
+	@Column(name = "CODE")
+	private String code;
 
-    // Course level, between 1 and 4
-    @ApiModelProperty(value = "Program level", required = true, example = "1")
-    @Min(1)
-    @Max(4)
-    @Column(name = "LEVEL")
-    private int level;
+	// Course level, between 1 and 4
+	@ApiModelProperty(value = "Program level", required = true, example = "1")
+	@Min(1)
+	@Max(4)
+	@Column(name = "LEVEL")
+	private int level;
 
-    // School term
-    @ApiModelProperty(value = "School term", required = true, allowableValues = "FALL, WINTER, SPRING, SUMMER")
-    @Enumerated(EnumType.STRING)
-    @NotNull
-    @Column(name = "TERM")
-    private Term term;
+	// School term
+	@ApiModelProperty(value = "School term", required = true, allowableValues = "FALL, WINTER, SPRING, SUMMER")
+	@Enumerated(EnumType.STRING)
+	@NotNull
+	@Column(name = "TERM")
+	private Term term;
 
-    // Academic year
-    @ApiModelProperty(value = "Academic year", required = true, example = "2020")
-    @NotNull
-    @Column(name = "ACADEMIC_YEAR")
-    private Integer academicYear;
+	// Academic year
+	@ApiModelProperty(value = "Academic year", required = true, example = "2020")
+	@NotNull
+	@Column(name = "ACADEMIC_YEAR")
+	private Integer academicYear;
 }
 

@@ -18,7 +18,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 class CourseManagementApplicationTests {
 
 	@Test
-	void contextLoads() {
-	}
+	void contextLoads() {}
 
 }
