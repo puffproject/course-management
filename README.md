@@ -83,6 +83,14 @@ Password:
 
 For more information about H2 databases see the [H2 Database Engine](https://www.h2database.com/html/main.html).
 
+### Formatting
+
+The codebase is auto-formatted with the [formatter-maven-plugin](https://code.revelc.net/formatter-maven-plugin/) that will format all source code files in the `src/` and `test/` directories according to the settings in the `style.xml` file, which are based on eclipse profile settings.
+
+Run the `formatter:format` command to run the formatter. It is also bound to the `format` goal that will run as part of the `compile` phase. 
+
+You can also add the git hook in `.hooks` to your local `.git/hooks` folder to run the formatter on pre-commit.
+
 ## Contributors
 The _Puff_ project is looking for contributors to join the initiative!
 For information about progress, features under construction and opportunities to contribute see [our project board](https://github.com/benjaminkostiuk/unity-test/projects/1).
