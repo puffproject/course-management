@@ -21,46 +21,50 @@ import org.springframework.security.web.authentication.session.SessionAuthentica
 @EnableGlobalMethodSecurity(jsr250Enabled = true)
 public class KeycloakSecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
 
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        super.configure(http);
-        http.csrf().disable().headers().frameOptions().disable();
-        http.authorizeRequests()
-                // Permit all swagger links
-                .antMatchers("/v2/api-docs",
-                        "/configuration/ui",
-                        "/swagger-resources/**",
-                        "/configuration/security",
-                        "/swagger-ui.html",
-                        "/webjars/**").permitAll()
-                // Allow h2
-                .antMatchers("/h2/**").permitAll()
-                // Allow actuator endpoints
-                .antMatchers("/actuator/health").permitAll()
-                .antMatchers("/actuator/info").permitAll()
-                // Authorize all other requests
-                .mvcMatchers("/**").hasRole("USER")
-                .anyRequest().authenticated();
-    }
+	@Override
+	protected void configure(HttpSecurity http) throws Exception {
+		super.configure(http);
+		http.csrf().disable().headers().frameOptions().disable();
+		http
+			.authorizeRequests()
+			// Permit all swagger links
+			.antMatchers(
+				"/v2/api-docs", "/configuration/ui", "/swagger-resources/**", "/configuration/security",
+				"/swagger-ui.html", "/webjars/**")
+			.permitAll()
+			// Allow h2
+			.antMatchers("/h2/**")
+			.permitAll()
+			// Allow actuator endpoints
+			.antMatchers("/actuator/health")
+			.permitAll()
+			.antMatchers("/actuator/info")
+			.permitAll()
+			// Authorize all other requests
+			.mvcMatchers("/**")
+			.hasRole("USER")
+			.anyRequest()
+			.authenticated();
+	}
 
-    @Autowired
-    public void configureGlobal(AuthenticationManagerBuilder auth) {
-        SimpleAuthorityMapper grantedAuthorityMapper = new SimpleAuthorityMapper();
-        grantedAuthorityMapper.setPrefix("ROLE_");              // Prefix  with ROLE_
-        grantedAuthorityMapper.setConvertToUpperCase(true);     // Convert ROLE to uppercase
-        KeycloakAuthenticationProvider keycloakAuthenticationProvider = keycloakAuthenticationProvider();
-        keycloakAuthenticationProvider.setGrantedAuthoritiesMapper(grantedAuthorityMapper);
-        auth.authenticationProvider(keycloakAuthenticationProvider);
-    }
+	@Autowired
+	public void configureGlobal(AuthenticationManagerBuilder auth) {
+		SimpleAuthorityMapper grantedAuthorityMapper = new SimpleAuthorityMapper();
+		grantedAuthorityMapper.setPrefix("ROLE_"); // Prefix with ROLE_
+		grantedAuthorityMapper.setConvertToUpperCase(true); // Convert ROLE to uppercase
+		KeycloakAuthenticationProvider keycloakAuthenticationProvider = keycloakAuthenticationProvider();
+		keycloakAuthenticationProvider.setGrantedAuthoritiesMapper(grantedAuthorityMapper);
+		auth.authenticationProvider(keycloakAuthenticationProvider);
+	}
 
-    @Bean
-    @Override
-    protected SessionAuthenticationStrategy sessionAuthenticationStrategy() {
-        return new RegisterSessionAuthenticationStrategy(new SessionRegistryImpl());
-    }
+	@Bean
+	@Override
+	protected SessionAuthenticationStrategy sessionAuthenticationStrategy() {
+		return new RegisterSessionAuthenticationStrategy(new SessionRegistryImpl());
+	}
 
-    @Bean
-    public KeycloakConfigResolver keycloakConfigResolver() {
-        return new KeycloakSpringBootConfigResolver();
-    }
+	@Bean
+	public KeycloakConfigResolver keycloakConfigResolver() {
+		return new KeycloakSpringBootConfigResolver();
+	}
 }

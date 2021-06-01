@@ -26,65 +26,74 @@ import java.util.List;
 @RestController
 public class CourseController implements CourseApi {
 
-    @Autowired
-    private CourseService courseService;
+	@Autowired
+	private CourseService courseService;
 
-    @Override
-    @RolesAllowed("ROLE_ADMIN")
-    public ResponseEntity<Course> createCourse(Course course) {
-        return new ResponseEntity<>(courseService.createCourse(course), HttpStatus.CREATED);
-    }
+	@Override
+	@RolesAllowed("ROLE_ADMIN")
+	public ResponseEntity<Course> createCourse(Course course) {
+		return new ResponseEntity<>(courseService.createCourse(course), HttpStatus.CREATED);
+	}
 
-    @Override
-    public ResponseEntity<CoursePage> getCourses(Pageable pageable, Integer id, String code, Integer level, String term, Integer academicYear) {
-        // Convert term to Enum before searching
-        Term termEnum = null;
-        if(term != null) {
-            try { termEnum = Term.valueOf(term); }
-            catch(IllegalArgumentException e) { throw new HttpMessageNotReadableException("Not one of accepted values"); }
-        }
-        // Retrieve results using service
-        CoursePage page = new CoursePage(courseService.getCourses(pageable, id, code, level, termEnum, academicYear));
-        return new ResponseEntity<>(page, HttpStatus.OK);
-    }
+	@Override
+	public ResponseEntity<CoursePage> getCourses(
+			Pageable pageable,
+			Integer id,
+			String code,
+			Integer level,
+			String term,
+			Integer academicYear) {
+		// Convert term to Enum before searching
+		Term termEnum = null;
+		if (term != null) {
+			try {
+				termEnum = Term.valueOf(term);
+			} catch (IllegalArgumentException e) {
+				throw new HttpMessageNotReadableException("Not one of accepted values");
+			}
+		}
+		// Retrieve results using service
+		CoursePage page = new CoursePage(courseService.getCourses(pageable, id, code, level, termEnum, academicYear));
+		return new ResponseEntity<>(page, HttpStatus.OK);
+	}
 
-    @Override
-    @RolesAllowed("ROLE_ADMIN")
-    public void deleteCourse(Integer courseId) {
-        courseService.deleteCourse(courseId);
-    }
+	@Override
+	@RolesAllowed("ROLE_ADMIN")
+	public void deleteCourse(Integer courseId) {
+		courseService.deleteCourse(courseId);
+	}
 
-    @Override
-    @RolesAllowed("ROLE_ADMIN")
-    public ResponseEntity<CourseAttribute> createCourseAttr(Integer courseId, CourseAttribute courseAttr) {
-        // Find and and set course id for attribute
-        Course course = courseService.getCourseById(courseId);
-        courseAttr.setCourseId(course.getId());
-        return new ResponseEntity<>(courseService.createCourseAttr(courseAttr), HttpStatus.CREATED);
-    }
+	@Override
+	@RolesAllowed("ROLE_ADMIN")
+	public ResponseEntity<CourseAttribute> createCourseAttr(Integer courseId, CourseAttribute courseAttr) {
+		// Find and and set course id for attribute
+		Course course = courseService.getCourseById(courseId);
+		courseAttr.setCourseId(course.getId());
+		return new ResponseEntity<>(courseService.createCourseAttr(courseAttr), HttpStatus.CREATED);
+	}
 
-    @Override
-    public ResponseEntity<CourseAttributeView> getCourseAttrs(Integer courseId) {
-        // Get all attributes for the course
-        List<CourseAttribute> attributes = courseService.getCourseAttributes(null, courseId, null);
-        // Build CourseAttributeView to return
-        CourseAttributeView response = new CourseAttributeView(attributes);
-        return new ResponseEntity<>(response, HttpStatus.OK);
-    }
+	@Override
+	public ResponseEntity<CourseAttributeView> getCourseAttrs(Integer courseId) {
+		// Get all attributes for the course
+		List<CourseAttribute> attributes = courseService.getCourseAttributes(null, courseId, null);
+		// Build CourseAttributeView to return
+		CourseAttributeView response = new CourseAttributeView(attributes);
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
 
-    @Override
-    @RolesAllowed("ROLE_ADMIN")
-    public void deleteCourseAttr(Integer courseId, String attributeName) {
-        // Parse attribute name
-        CourseAttributeName name;
-        try {
-            name = Utils.parseToEnum(attributeName, CourseAttributeName.class);
-        } catch (IllegalArgumentException e) {
-            throw new HttpMessageNotReadableException("Not one of allowed values of CourseAttributeName.");
-        }
+	@Override
+	@RolesAllowed("ROLE_ADMIN")
+	public void deleteCourseAttr(Integer courseId, String attributeName) {
+		// Parse attribute name
+		CourseAttributeName name;
+		try {
+			name = Utils.parseToEnum(attributeName, CourseAttributeName.class);
+		} catch (IllegalArgumentException e) {
+			throw new HttpMessageNotReadableException("Not one of allowed values of CourseAttributeName.");
+		}
 
-        // Get matching attributes and delete them
-        List<CourseAttribute> attributes = courseService.getCourseAttributes(null, courseId, name);
-        attributes.forEach(a -> courseService.deleteCourseAttr(a.getId()));
-    }
+		// Get matching attributes and delete them
+		List<CourseAttribute> attributes = courseService.getCourseAttributes(null, courseId, name);
+		attributes.forEach(a -> courseService.deleteCourseAttr(a.getId()));
+	}
 }

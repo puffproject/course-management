@@ -24,89 +24,91 @@ import java.util.List;
 @ApiModel(value = "ApiError", description = "REST Api Error")
 public class ApiError {
 
-    @ApiModelProperty(example = "2020-12-19T01:00:26")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'hh:mm:ss")
-    private LocalDateTime timestamp;
+	@ApiModelProperty(example = "2020-12-19T01:00:26")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'hh:mm:ss")
+	private LocalDateTime timestamp;
 
-    @ApiModelProperty
-    private Integer code;
+	@ApiModelProperty
+	private Integer code;
 
-    @ApiModelProperty
-    private HttpStatus status;
+	@ApiModelProperty
+	private HttpStatus status;
 
-    @ApiModelProperty
-    private String message;
+	@ApiModelProperty
+	private String message;
 
-    @ApiModelProperty
-    private String debugMessage;
+	@ApiModelProperty
+	private String debugMessage;
 
-    @ApiModelProperty
-    private String path;
+	@ApiModelProperty
+	private String path;
 
-    @ApiModelProperty
-    private List<ApiSubError> subErrors = new ArrayList<>();
+	@ApiModelProperty
+	private List<ApiSubError> subErrors = new ArrayList<>();
 
-    private ApiError() {
-        this.timestamp = LocalDateTime.now();
-    }
+	private ApiError() {
+		this.timestamp = LocalDateTime.now();
+	}
 
-    public ApiError(HttpStatus status, String message, Throwable ex) {
-        this();
-        this.status = status;
-        this.code = status.value();
-        this.message = message;
-        this.debugMessage = ex.getLocalizedMessage();
-    }
+	public ApiError(HttpStatus status, String message, Throwable ex) {
+		this();
+		this.status = status;
+		this.code = status.value();
+		this.message = message;
+		this.debugMessage = ex.getLocalizedMessage();
+	}
 
-    private ApiError(HttpStatus status, String message, Throwable ex, String path) {
-        this(status, message, ex);
-        this.path = path;
-    }
+	private ApiError(HttpStatus status, String message, Throwable ex, String path) {
+		this(status, message, ex);
+		this.path = path;
+	}
 
-    public ApiError(HttpStatus status, String message, Throwable ex, WebRequest request) {
-        this(status, message, ex, ((ServletWebRequest) request).getRequest().getRequestURI());
-    }
+	public ApiError(HttpStatus status, String message, Throwable ex, WebRequest request) {
+		this(status, message, ex, ((ServletWebRequest) request).getRequest().getRequestURI());
+	}
 
-    public ApiError(HttpStatus status, String message, Throwable ex, HttpServletRequest request) {
-        this(status, message, ex, request.getRequestURI());
-    }
+	public ApiError(HttpStatus status, String message, Throwable ex, HttpServletRequest request) {
+		this(status, message, ex, request.getRequestURI());
+	}
 
-    private void addSubError(ApiSubError subError) {
-        this.subErrors.add(subError);
-    }
+	private void addSubError(ApiSubError subError) {
+		this.subErrors.add(subError);
+	}
 
-    private void addValidationError(String object, String field, Object rejectedValue, String message) {
-        addSubError(new ApiValidationError(object, field, rejectedValue, message));
-    }
+	private void addValidationError(String object, String field, Object rejectedValue, String message) {
+		addSubError(new ApiValidationError(object, field, rejectedValue, message));
+	}
 
-    private void addValidationError(String object, String message) {
-        addSubError(new ApiValidationError(object, message));
-    }
+	private void addValidationError(String object, String message) {
+		addSubError(new ApiValidationError(object, message));
+	}
 
-    /**
-     * Add a ObjectError validation error as a sub error. Usually when a @Valid validation fails.
-     *
-     * @param objectError ObjectError to be added as a validation sub error.
-     */
-    public void addValidationError(ObjectError objectError) {
-        if(objectError instanceof FieldError) {
-            FieldError fieldError = (FieldError) objectError;
-            this.addValidationError(fieldError.getObjectName(), fieldError.getField(), fieldError.getRejectedValue(), fieldError.getDefaultMessage());
-        } else {
-            this.addValidationError(objectError.getObjectName(), objectError.getDefaultMessage());
-        }
-    }
+	/**
+	 * Add a ObjectError validation error as a sub error. Usually when a @Valid validation fails.
+	 *
+	 * @param objectError ObjectError to be added as a validation sub error.
+	 */
+	public void addValidationError(ObjectError objectError) {
+		if (objectError instanceof FieldError) {
+			FieldError fieldError = (FieldError) objectError;
+			this
+				.addValidationError(
+					fieldError.getObjectName(), fieldError.getField(), fieldError.getRejectedValue(),
+					fieldError.getDefaultMessage());
+		} else {
+			this.addValidationError(objectError.getObjectName(), objectError.getDefaultMessage());
+		}
+	}
 
-    /**
-     * Add a ConstraintViolation as a sub error. Usually when a @Validated validation fails.
-     *
-     * @param cv ConstraintViolation error to be added as a validation sub error.
-     */
-    public void addValidationError(ConstraintViolation<?> cv) {
-        this.addValidationError(
-                cv.getRootBeanClass().getSimpleName(),
-                ((PathImpl) cv.getPropertyPath()).getLeafNode().asString(),
-                cv.getInvalidValue(),
-                cv.getMessage());
-    }
+	/**
+	 * Add a ConstraintViolation as a sub error. Usually when a @Validated validation fails.
+	 *
+	 * @param cv ConstraintViolation error to be added as a validation sub error.
+	 */
+	public void addValidationError(ConstraintViolation<?> cv) {
+		this
+			.addValidationError(
+				cv.getRootBeanClass().getSimpleName(), ((PathImpl) cv.getPropertyPath()).getLeafNode().asString(),
+				cv.getInvalidValue(), cv.getMessage());
+	}
 }

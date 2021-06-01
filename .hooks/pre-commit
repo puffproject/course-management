@@ -1,0 +1,27 @@
+#!/bin/bash
+#
+# A hook script to verify what is about to be committed.
+# Called by "git commit" with no arguments.  The hook should
+# exit with non-zero status after issuing an appropriate message if
+# it wants to stop the commit.
+#
+# To enable this hook, add this file to .git/hooks
+
+set -e
+
+# Get the root of the project
+BASE_DIR="$(git rev-parse --show-toplevel)"
+
+# Run formatter to format files before commit
+mvn -f "$BASE_DIR/pom.xml" formatter:format &>/dev/null
+
+# Find all files staged for commit
+filesStagedForCommit="$(git diff --name-only --cached)"
+
+# Add all files back in case any were changed by formatter
+for file in $filesStagedForCommit
+do
+    git add $file
+done
+
+exit 0

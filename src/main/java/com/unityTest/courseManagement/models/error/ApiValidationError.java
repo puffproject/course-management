@@ -14,27 +14,27 @@ import lombok.EqualsAndHashCode;
 @ApiModel
 public class ApiValidationError extends ApiSubError {
 
-    @ApiModelProperty
-    private String object;
+	@ApiModelProperty
+	private String object;
 
-    @ApiModelProperty
-    private String field;
+	@ApiModelProperty
+	private String field;
 
-    @ApiModelProperty
-    private Object rejectedValue;
+	@ApiModelProperty
+	private Object rejectedValue;
 
-    @ApiModelProperty
-    private String message;
+	@ApiModelProperty
+	private String message;
 
-    public ApiValidationError(String object, String message) {
-        this.object = object;
-        this.message = message;
-    }
+	public ApiValidationError(String object, String message) {
+		this.object = object;
+		this.message = message;
+	}
 
-    public ApiValidationError(String object, String field, Object rejectedValue, String message) {
-        this(object,  message);
-        this.field = field;
-        this.rejectedValue = rejectedValue;
-    }
+	public ApiValidationError(String object, String field, Object rejectedValue, String message) {
+		this(object, message);
+		this.field = field;
+		this.rejectedValue = rejectedValue;
+	}
 
 }
