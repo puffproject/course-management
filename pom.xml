@@ -17,6 +17,7 @@
 	<properties>
 		<java.version>1.8</java.version>
 		<keycloak.version>13.0.1</keycloak.version>
+		<spring.cloud-version>Hoxton.SR8</spring.cloud-version>
 	</properties>
 
 	<dependencies>
@@ -33,6 +34,11 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-actuator</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-config</artifactId>
 		</dependency>
 
 		<dependency>
@@ -142,6 +148,13 @@
 				<groupId>org.keycloak.bom</groupId>
 				<artifactId>keycloak-adapter-bom</artifactId>
 				<version>${keycloak.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework.cloud</groupId>
+				<artifactId>spring-cloud-dependencies</artifactId>
+				<version>${spring.cloud-version}</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
