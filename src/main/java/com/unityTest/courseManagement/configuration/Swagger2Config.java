@@ -6,6 +6,7 @@ import com.unityTest.courseManagement.utils.AnnotationProxy;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
@@ -25,6 +26,7 @@ import java.util.*;
 
 import static springfox.documentation.schema.AlternateTypeRules.newRule;
 
+@RefreshScope
 @Configuration
 @EnableSwagger2
 public class Swagger2Config {
