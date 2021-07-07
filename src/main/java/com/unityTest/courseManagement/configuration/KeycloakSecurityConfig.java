@@ -40,6 +40,9 @@ public class KeycloakSecurityConfig extends KeycloakWebSecurityConfigurerAdapter
 			.permitAll()
 			.antMatchers("/actuator/info")
 			.permitAll()
+			// Protect refresh endpoint with ADMIN role
+			.antMatchers("/actuator/refresh")
+			.hasRole("ADMIN")
 			// Authorize all other requests
 			.mvcMatchers("/**")
 			.hasRole("USER")
