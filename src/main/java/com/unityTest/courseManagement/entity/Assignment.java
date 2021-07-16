@@ -13,16 +13,17 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.util.Date;
 
 /**
- * Models a university course for a given semester
+ * Models a course assignment for a given semester
  */
 @Data
 @RequiredArgsConstructor
 @AllArgsConstructor
-@ApiModel(value = "Course", description = "Models a university course")
+@ApiModel(value = "Assignment", description = "Models a course assignment")
 @Entity
-@Table(name = "COURSE")
+@Table(name = "ASSIGNMENT")
 public class Assignment {
 
 	@Id
@@ -32,35 +33,30 @@ public class Assignment {
 		name = "sequence-generator",
 		strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator",
 		parameters = {
-			@org.hibernate.annotations.Parameter(name = "sequence_name", value = "COURSE_SEQUENCE"),
+			@org.hibernate.annotations.Parameter(name = "sequence_name", value = "ASSIGNMENT_SEQUENCE"),
 			@org.hibernate.annotations.Parameter(name = "initial_value", value = "1000"),
 			@org.hibernate.annotations.Parameter(name = "increment_size", value = "1")})
 	private int id;
 
-	// Course code
+	// Course belonging to assignment
 	@ApiModelProperty(value = "Course code", required = true, example = "COMPSCI 1JC3")
 	@NotBlank
-	@Column(name = "CODE")
-	private String code;
+//	@Column(name = "CODE")
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name="ID")
+	private int course;
 
-	// Course level, between 1 and 4
-	@ApiModelProperty(value = "Program level", required = true, example = "1")
-	@Min(1)
-	@Max(4)
-	@Column(name = "LEVEL")
-	private int level;
+	// Course code
+	@ApiModelProperty(value = "Assignment name", required = true, example = "Assignment 1")
+	@NotBlank
+	@Column(name = "NAME")
+	private String name;
 
-	// School term
-	@ApiModelProperty(value = "School term", required = true, allowableValues = "FALL, WINTER, SPRING, SUMMER")
-	@Enumerated(EnumType.STRING)
-	@NotNull
-	@Column(name = "TERM")
-	private Term term;
+	// Due date
+	@ApiModelProperty(value = "Due date", required = true)
+//	@NotNull
+	@Column(name = "DUE_DATE")
+	private Date date;
 
-	// Academic year
-	@ApiModelProperty(value = "Academic year", required = true, example = "2020")
-	@NotNull
-	@Column(name = "ACADEMIC_YEAR")
-	private Integer academicYear;
 }
 
