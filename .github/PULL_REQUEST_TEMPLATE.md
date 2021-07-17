@@ -24,4 +24,3 @@ This change is a
 ## Todos
 - [ ] Ensure unit tests pass
 - [ ] Update documentation for changes (if necessary)
-- [ ] Delete stale branch after merge

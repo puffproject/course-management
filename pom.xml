@@ -17,7 +17,22 @@
 	<properties>
 		<java.version>1.8</java.version>
 		<keycloak.version>13.0.1</keycloak.version>
+		<project.scm.id>github</project.scm.id>
+		<git.repository>puffproject/course-management</git.repository>
 	</properties>
+
+	<scm>
+		<developerConnection>scm:git:https://github.com/${git.repository}.git</developerConnection>
+	  	<tag>HEAD</tag>
+  	</scm>
+
+	<distributionManagement>
+		<repository>
+			<id>github</id>
+			<name>GitHub puff project Apache Maven Packages</name>
+			<url>https://maven.pkg.github.com/${git.repository}</url>
+		</repository>
+	</distributionManagement>
 
 	<dependencies>
 		<dependency>
@@ -148,6 +163,38 @@
 		</dependencies>
 	</dependencyManagement>
 
+	<profiles>
+		<profile>
+			<id>coverage</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.jacoco</groupId>
+						<artifactId>jacoco-maven-plugin</artifactId>
+						<version>0.8.7</version>
+						<executions>
+							<!-- Prepares the property pointing to the JaCoCo runtime agent
+							which is passed as VM argument when Maven the Surefire plugin is executed. -->
+							<execution>
+								<goals>
+									<goal>prepare-agent</goal>
+								</goals>
+							</execution>
+							<!-- Ensures that the code coverage report is created after
+							all tests have been run. -->
+							<execution>
+								<id>generate-report</id>
+								<goals>
+									<goal>report</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+
 	<build>
 		<plugins>
 			<plugin>
@@ -168,6 +215,7 @@
 				<configuration>
 					<configFile>${project.basedir}/style.xml</configFile>
 					<encoding>UTF-8</encoding>
+					<lineEnding>KEEP</lineEnding>
 				</configuration>
 				<executions>
 					<execution>
@@ -177,6 +225,15 @@
 					</execution>
 				</executions>
 			</plugin>
+			<plugin>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>3.0.0-M4</version>
+                <configuration>
+                    <tagNameFormat>v@{project.version}</tagNameFormat>
+					<scmCommentPrefix>[Github Actions]</scmCommentPrefix>
+					<scmDevelopmentCommitComment>@{prefix} increment pom version after release</scmDevelopmentCommitComment>
+                </configuration>
+            </plugin>
 		</plugins>
 		<resources>
 			<resource>

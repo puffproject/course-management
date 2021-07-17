@@ -20,6 +20,9 @@
 
 # Course-management
 
+[![Build & Tests](https://img.shields.io/github/workflow/status/puffproject/course-management/Build%20&%20Test?label=build%20%26%20tests)](https://github.com/puffproject/course-management/actions/workflows/build.yml)
+[![Code coverage](https://codecov.io/gh/puffproject/course-management/branch/master/graph/badge.svg?token=YRCB9LTSNC)](https://codecov.io/gh/puffproject/course-management)
+
 Spring-boot microservice managing courses, assignments and user actions for the puff platform. For the full overview of the puff project see the [docs repository](https://github.com/puffproject/docs).
 
 ## Getting started
