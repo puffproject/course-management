@@ -49,10 +49,7 @@ management:
     port: 8080
     address: 127.0.0.1
   endpoints:
-    enabled-by-default: false
-  endpoint:
-    health.enabled: true
-    info.enabled: true
+    web.exposure.include: health,info,refresh
 
 keycloak:
   realm: puff

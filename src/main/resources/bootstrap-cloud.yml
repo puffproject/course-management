@@ -1,0 +1,6 @@
+# TODO Add cloud config details + security for deployment
+#spring:
+#  cloud:
+#    config:
+#      uri: http://localhost:8888
+#      fail-fast: false
