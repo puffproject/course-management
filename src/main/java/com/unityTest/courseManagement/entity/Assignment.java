@@ -41,10 +41,10 @@ public class Assignment {
 	// Course belonging to assignment
 	@ApiModelProperty(value = "Course code", required = true, example = "COMPSCI 1JC3")
 	@NotBlank
-//	@Column(name = "CODE")
+	// @Column(name = "CODE")
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name="ID")
-	private int course;
+	@JoinColumn(name = "COURSE_ID")
+	private Course course;
 
 	// Course code
 	@ApiModelProperty(value = "Assignment name", required = true, example = "Assignment 1")
@@ -54,7 +54,7 @@ public class Assignment {
 
 	// Due date
 	@ApiModelProperty(value = "Due date", required = true)
-//	@NotNull
+	// @NotNull
 	@Column(name = "DUE_DATE")
 	private Date date;
 
