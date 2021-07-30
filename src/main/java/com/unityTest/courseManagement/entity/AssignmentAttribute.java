@@ -1,7 +1,7 @@
 package com.unityTest.courseManagement.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.unityTest.courseManagement.models.CourseAttributeName;
+import com.unityTest.courseManagement.models.AssignmentAttributeName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -32,7 +32,7 @@ public class AssignmentAttribute {
 		name = "sequence-generator",
 		strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator",
 		parameters = {
-			@org.hibernate.annotations.Parameter(name = "sequence_name", value = "COURSE_ATTR_SEQUENCE"),
+			@org.hibernate.annotations.Parameter(name = "sequence_name", value = "ASSIGNMENT_ATTR_SEQUENCE"),
 			@org.hibernate.annotations.Parameter(name = "initial_value", value = "1000"),
 			@org.hibernate.annotations.Parameter(name = "increment_size", value = "1")})
 	private int id;
@@ -43,14 +43,14 @@ public class AssignmentAttribute {
 	private Integer assignmentId;
 
 	// Attribute name
-	@ApiModelProperty(value = "Course attribute name", required = true, example = "professorName")
+	@ApiModelProperty(value = "Assignment attribute name", required = true, example = "weight")
 	@Enumerated(EnumType.STRING)
 	@NotNull
 	@Column(name = "ATTR_NAME")
-	private CourseAttributeName name;
+	private AssignmentAttributeName name;
 
 	// Attribute value
-	@ApiModelProperty(value = "Course attribute value", required = true, example = "William M. Farmer")
+	@ApiModelProperty(value = "Assignment attribute value", required = true, example = "5%")
 	@NotBlank
 	@Column(name = "ATTR_VALUE")
 	private String value;
