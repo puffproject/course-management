@@ -55,7 +55,7 @@ public class Assignment {
 	// Due date
 	@ApiModelProperty(value = "Due date", required = true)
 	// @NotNull
-	@Column(name = "DUE_DATE")
+	@Column(name = "DUE_DATE", columnDefinition = "DATE")
 	private Date date;
 
 }
