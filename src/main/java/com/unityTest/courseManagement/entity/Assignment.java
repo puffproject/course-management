@@ -1,6 +1,5 @@
 package com.unityTest.courseManagement.entity;
 
-import com.unityTest.courseManagement.models.Term;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -9,10 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 /**
@@ -39,11 +35,10 @@ public class Assignment {
 	private int id;
 
 	// Course belonging to assignment
-	@ApiModelProperty(value = "Course code", required = true, example = "COMPSCI 1JC3")
+	@ApiModelProperty(value = "Assignment code", required = true)
 	@NotBlank
-	// @Column(name = "CODE")
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "COURSE_ID")
+	@JoinColumn(name = "COURSE_ID", referencedColumnName = "ID", nullable = false)
 	private Course course;
 
 	// Course code
