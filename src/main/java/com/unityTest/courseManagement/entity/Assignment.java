@@ -35,7 +35,7 @@ public class Assignment {
 	private int id;
 
 	// Course belonging to assignment
-	@ApiModelProperty(value = "Assignment code", required = true)
+	@ApiModelProperty(value = "Assignment course", required = true)
 	@NotBlank
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "COURSE_ID", referencedColumnName = "ID", nullable = false)

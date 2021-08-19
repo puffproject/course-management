@@ -1,7 +1,7 @@
 package com.unityTest.courseManagement.models;
 
 /**
- * Attributes of an assignment should match those returned as part of AssignmentAttributeView
+ * Attributes of an assignment. Names should match those returned as part of CourseAttributeView
  */
 public enum AssignmentAttributeName {
 	description,
