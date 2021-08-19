@@ -38,11 +38,12 @@ jobs:
     # Run merge script
     - name: Run version bump script and update pom.xml
       run: |
-        NEW_VERSION=$(./.github/scripts/bumpVersion.sh "${{ env.MERGE_VERSION }}" "${{ env.MASTER_VERSION }}" "${{ github.head_ref }}")
+        export NEW_VERSION=$(./.github/scripts/bumpVersion.sh "${{ env.MERGE_VERSION }}" "${{ env.MASTER_VERSION }}" "${{ github.head_ref }}")
+        echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
         mvn -B -U --no-transfer-progress versions:set -DnewVersion=$NEW_VERSION
     # Commit bumped version
     - name: Commit new pom version
       uses: stefanzweifel/git-auto-commit-action@v4
       with:
-        commit_message: Bump pom.xml version
+        commit_message: "Bump pom.xml version to ${{ env.NEW_VERSION }}"
         branch: master
