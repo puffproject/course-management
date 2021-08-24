@@ -14,4 +14,7 @@ GRANT INSERT ON puff_dev.* TO 'u_puff_service'@'%';
 GRANT SELECT ON puff_dev.* TO 'u_puff_service'@'%';
 GRANT UPDATE ON puff_dev.* TO 'u_puff_service'@'%';
 
+CREATE USER 'u_keycloak'@'%' IDENTIFIED BY '${KEYCLOAK_PASSWORD}';
+GRANT ALL PRIVILEGES ON keycloak.* TO 'u_keycloak'@'%';
+
 FLUSH PRIVILEGES;
