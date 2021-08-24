@@ -1,6 +1,7 @@
-# TODO Add cloud config details + security for deployment
-#spring:
-#  cloud:
-#    config:
-#      uri: http://localhost:8888
-#      fail-fast: false
+spring:
+  cloud:
+    config:
+      uri: https://puff-cloud-config.azurewebsites.net
+      fail-fast: true
+      username: ${CONFIG_USER_NAME}
+      password: ${CONFIG_USER_PASSWORD}
