@@ -38,8 +38,8 @@ public class Vote {
 
 	// Id of source item being voted on
 	@NotNull
-	@Column(name = "ITEM_ID")
-	private int itemId;
+	@Column(name = "SOURCE_ITEM_ID")
+	private int sourceItemId;
 
 	// Id of author who voted
 	@NotNull

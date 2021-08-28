@@ -38,8 +38,8 @@ public class Comment {
 
 	// Id of source item being commented on
 	@NotNull
-	@Column(name = "ITEM_ID")
-	private int itemId;
+	@Column(name = "SOURCE_ITEM_ID")
+	private int sourceItemId;
 
 	// Id of author who commented
 	@NotNull
