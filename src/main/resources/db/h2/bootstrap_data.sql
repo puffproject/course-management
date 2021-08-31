@@ -40,3 +40,10 @@ VALUES
 (9, 'SUITE', 2, 'X02', 'UPVOTE'),
 (10, 'SUITE', 2, 'X03', 'UPVOTE'),
 (11, 'SUITE', 2, 'X04', 'DOWNVOTE');
+
+INSERT INTO COMMENT (ID, SOURCE_TYPE, SOURCE_ITEM_ID, AUTHOR_ID, CONTENT, UPVOTE_COUNT)
+VALUES
+(1, 'CASE', 1000, 'X01', 'This isn''t that great of a test case!', -2),
+(2, 'CASE', 1000, 'X02', 'How about being positive? :smile:', 0),
+
+(3, 'CASE', 1001, 'X03', 'Should we have done this instead? `x = 3`?', 1);
