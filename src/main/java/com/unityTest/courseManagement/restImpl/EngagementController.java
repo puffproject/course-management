@@ -1,23 +1,33 @@
 package com.unityTest.courseManagement.restImpl;
 
+import com.unityTest.courseManagement.entity.Comment;
 import com.unityTest.courseManagement.entity.SourceType;
 import com.unityTest.courseManagement.entity.Vote;
 import com.unityTest.courseManagement.entity.VoteAction;
+import com.unityTest.courseManagement.exception.ElementNotFoundException;
 import com.unityTest.courseManagement.exception.UnsupportedVoteActionException;
 import com.unityTest.courseManagement.models.api.request.CommentBody;
 import com.unityTest.courseManagement.models.api.request.VoteActionOptions;
+import com.unityTest.courseManagement.models.api.response.Author;
 import com.unityTest.courseManagement.models.api.response.CommentView;
 import com.unityTest.courseManagement.models.api.response.page.CommentPage;
 import com.unityTest.courseManagement.restApi.EngagementApi;
+import com.unityTest.courseManagement.service.CommentService;
 import com.unityTest.courseManagement.service.VoteService;
 import com.unityTest.courseManagement.utils.Utils;
+import org.keycloak.representations.AccessToken;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.data.domain.Pageable;
 
 import javax.validation.Valid;
 import java.security.Principal;
+import java.util.Date;
+import java.util.Iterator;
 
 /**
  * Rest controller for the /engagement endpoints
@@ -27,6 +37,9 @@ public class EngagementController implements EngagementApi {
 
 	@Autowired
 	private VoteService voteService;
+
+	@Autowired
+	private CommentService commentService;
 
 	@Override
 	public void voteOnSourceItem(
@@ -58,15 +71,22 @@ public class EngagementController implements EngagementApi {
 			SourceType sourceType,
 			Integer sourceItemId,
 			@Valid CommentBody commentBody) {
-		return null;
+		AccessToken token = Utils.getAuthToken(principal);
+		String authorId = token.getSubject();
+		Comment commentToPost =
+			new Comment(0, sourceType, sourceItemId, authorId, commentBody.getContent(), new Date(), null, 0);
+		return new ResponseEntity<>(
+				new CommentView(commentService.saveComment(commentToPost), Author.of(token)), HttpStatus.CREATED);
 	}
 
 	@Override
 	public ResponseEntity<CommentPage> getCommentsOnSourceItem(
 			Pageable pageable,
 			SourceType sourceType,
-			Integer sourceItemId) {
-		return null;
+			Integer sourceItemId,
+			String authorId) {
+		Page<Comment> commentPage = commentService.getComments(pageable, sourceType, sourceItemId, authorId, null);
+		return new ResponseEntity<>(new CommentPage(commentService.toCommentViewPage(commentPage)), HttpStatus.OK);
 	}
 
 	@Override
@@ -76,7 +96,21 @@ public class EngagementController implements EngagementApi {
 			Integer sourceItemId,
 			Integer commentId,
 			@Valid CommentBody commentBody) {
-		return null;
+		Iterator<Comment> iter = commentService.getComments(sourceType, sourceItemId, null, commentId).iterator();
+		if (!iter.hasNext())
+			throw new ElementNotFoundException(
+					Comment.class, "source type", sourceType.toString(), "source item id", sourceItemId.toString(),
+					"id", String.valueOf(commentId));
+		// Only the author of the comment should be allowed to update it
+		AccessToken token = Utils.getAuthToken(principal);
+		Comment commentToUpdate = iter.next();
+		if (!Utils.isAuthor(token, commentToUpdate.getAuthorId()))
+			throw new AccessDeniedException("Access Denied");
+
+		return new ResponseEntity<>(
+				new CommentView(
+						commentService.updateCommentBody(commentToUpdate, commentBody.getContent()), Author.of(token)),
+				HttpStatus.OK);
 	}
 
 	@Override
@@ -85,6 +119,15 @@ public class EngagementController implements EngagementApi {
 			SourceType sourceType,
 			Integer sourceItemId,
 			Integer commentId) {
+		Iterator<Comment> iter = commentService.getComments(sourceType, sourceItemId, null, commentId).iterator();
+		if (!iter.hasNext())
+			throw new ElementNotFoundException(
+					Comment.class, "source type", sourceType, "source item id", sourceItemId, "id", commentId);
+		// Need to check that the user deleting is the author or admin
+		Comment commentToDelete = iter.next();
+		if (!Utils.isAuthorOrAdmin(Utils.getAuthToken(principal), commentToDelete.getAuthorId()))
+			throw new AccessDeniedException("Access Denied");
 
+		commentService.deleteComment(commentToDelete);
 	}
 }

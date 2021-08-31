@@ -35,6 +35,9 @@ public class VoteService {
 		Optional<Vote> existingVote = voteRepository.findOne(spec);
 
 		voteToSaveOrUpdate.setId(existingVote.map(Vote::getId).orElse(0));
+
+		// TODO Call Api to update platform
+
 		return voteRepository.save(voteToSaveOrUpdate);
 	}
 

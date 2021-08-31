@@ -63,7 +63,7 @@ public interface EngagementApi extends BaseApi {
 	/**
 	 * GET endpoint to retrieve comments under a source item
 	 * 
-	 * @return List of comments posted under the source item
+	 * @return Pageable view of comments posted under the source item
 	 */
 	@ApiOperation(
 		value = "Retrieve comments under a source item",
@@ -76,7 +76,8 @@ public interface EngagementApi extends BaseApi {
 			@ApiParam(value = "Type of source", required = true, allowableValues = "case")
 			@PathVariable(value = "sourceType") SourceType sourceType,
 			@ApiParam(value = "Id of source item", required = true)
-			@PathVariable(value = "sourceItemId") Integer sourceItemId);
+			@PathVariable(value = "sourceItemId") Integer sourceItemId,
+			@ApiParam(value = "Author id") @RequestParam(value = "authorId", required = false) String authorId);
 
 	/**
 	 * PATCH endpoint to update the contents of a comment under a source item. Restricted to owner of
