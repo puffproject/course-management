@@ -36,16 +36,14 @@ public class VoteService {
 			.equal(voteToSaveOrUpdate.getAuthorId(), Vote_.AUTHOR_ID)
 			.getSpec();
 		Optional<Vote> existingVote = voteRepository.findOne(spec);
-<<<<<<< HEAD
-=======
-
->>>>>>> 84729ea... Implement vote endpoint for api
 		voteToSaveOrUpdate.setId(existingVote.map(Vote::getId).orElse(0));
+
+		// TODO Call Api to update platform
+
 		return voteRepository.save(voteToSaveOrUpdate);
 	}
 
 	/**
-<<<<<<< HEAD
 	 * Update the target source item with an updated vote count. Need to keep tables updated with counts
 	 * so queries can sort by upvotes.
 	 * 
@@ -72,15 +70,3 @@ public class VoteService {
 		}
 	}
 }
-=======
-	 * Delete a Vote from the repository with matching unique constraint values
-	 * 
-	 * @param sourceType SourceType of vote to delete
-	 * @param sourceItemId Source item id of vote to delete
-	 * @param authorId Author id of vote to delete
-	 */
-	public void removeVote(SourceType sourceType, Integer sourceItemId, String authorId) {
-		voteRepository.deleteBySourceTypeAndSourceItemIdAndAuthorId(sourceType, sourceItemId, authorId);
-	}
-}
->>>>>>> 84729ea... Implement vote endpoint for api

@@ -38,6 +38,7 @@ public class EngagementController implements EngagementApi {
 	private VoteService voteService;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 	@Autowired
 	private CommentService commentService;
 
@@ -50,6 +51,11 @@ public class EngagementController implements EngagementApi {
 		// Also need to synchronize the upvote count across the platform depending on source type
 		voteService.updateVoteCountForSourceItem(sourceType, sourceItemId);
 =======
+=======
+	@Autowired
+	private CommentService commentService;
+
+>>>>>>> 4934cdd... Implement comment endpoints using comment service
 	@Override
 	public void voteOnSourceItem(
 			Principal principal,
@@ -82,19 +88,27 @@ public class EngagementController implements EngagementApi {
 			Integer sourceItemId,
 			@Valid CommentBody commentBody) {
 <<<<<<< HEAD
+<<<<<<< HEAD
 		if (sourceType != SourceType.CASE)
 			throw new UnsupportedActionException(String.format("Comments are not supported for %s", sourceType));
 
+=======
+>>>>>>> 4934cdd... Implement comment endpoints using comment service
 		AccessToken token = Utils.getAuthToken(principal);
 		String authorId = token.getSubject();
 		Comment commentToPost =
 			new Comment(0, sourceType, sourceItemId, authorId, commentBody.getContent(), new Date(), null, 0);
+<<<<<<< HEAD
 		Comment savedComment = commentService.saveComment(commentToPost);
 		// Call api to update comment count for cases
 		return new ResponseEntity<>(new CommentView(savedComment, Author.of(token)), HttpStatus.CREATED);
 =======
 		return null;
 >>>>>>> 84729ea... Implement vote endpoint for api
+=======
+		return new ResponseEntity<>(
+				new CommentView(commentService.saveComment(commentToPost), Author.of(token)), HttpStatus.CREATED);
+>>>>>>> 4934cdd... Implement comment endpoints using comment service
 	}
 
 	@Override
@@ -102,14 +116,20 @@ public class EngagementController implements EngagementApi {
 			Pageable pageable,
 			SourceType sourceType,
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 4934cdd... Implement comment endpoints using comment service
 			Integer sourceItemId,
 			String authorId) {
 		Page<Comment> commentPage = commentService.getComments(pageable, sourceType, sourceItemId, authorId, null);
 		return new ResponseEntity<>(new CommentPage(commentService.toCommentViewPage(commentPage)), HttpStatus.OK);
+<<<<<<< HEAD
 =======
 			Integer sourceItemId) {
 		return null;
 >>>>>>> 84729ea... Implement vote endpoint for api
+=======
+>>>>>>> 4934cdd... Implement comment endpoints using comment service
 	}
 
 	@Override
@@ -120,6 +140,9 @@ public class EngagementController implements EngagementApi {
 			Integer commentId,
 			@Valid CommentBody commentBody) {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 4934cdd... Implement comment endpoints using comment service
 		Iterator<Comment> iter = commentService.getComments(sourceType, sourceItemId, null, commentId).iterator();
 		if (!iter.hasNext())
 			throw new ElementNotFoundException(
@@ -135,9 +158,12 @@ public class EngagementController implements EngagementApi {
 				new CommentView(
 						commentService.updateCommentBody(commentToUpdate, commentBody.getContent()), Author.of(token)),
 				HttpStatus.OK);
+<<<<<<< HEAD
 =======
 		return null;
 >>>>>>> 84729ea... Implement vote endpoint for api
+=======
+>>>>>>> 4934cdd... Implement comment endpoints using comment service
 	}
 
 	@Override
@@ -147,6 +173,9 @@ public class EngagementController implements EngagementApi {
 			Integer sourceItemId,
 			Integer commentId) {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 4934cdd... Implement comment endpoints using comment service
 		Iterator<Comment> iter = commentService.getComments(sourceType, sourceItemId, null, commentId).iterator();
 		if (!iter.hasNext())
 			throw new ElementNotFoundException(
@@ -155,12 +184,20 @@ public class EngagementController implements EngagementApi {
 		Comment commentToDelete = iter.next();
 		if (!Utils.isAuthorOrAdmin(Utils.getAuthToken(principal), commentToDelete.getAuthorId()))
 			throw new AccessDeniedException("Access Denied");
+<<<<<<< HEAD
 
 		commentService.deleteComment(commentToDelete);
 	}
 }
 =======
+=======
+>>>>>>> 4934cdd... Implement comment endpoints using comment service
 
+		commentService.deleteComment(commentToDelete);
 	}
+<<<<<<< HEAD
 }
 >>>>>>> 84729ea... Implement vote endpoint for api
+=======
+}
+>>>>>>> 4934cdd... Implement comment endpoints using comment service
