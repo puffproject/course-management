@@ -23,3 +23,20 @@ VALUES
 
 (9, 3, 'professorName', 'Curtis D''Alves'),
 (10, 3, 'title', 'Practice and Expertise');
+
+INSERT INTO VOTE (ID, SOURCE_TYPE, SOURCE_ITEM_ID, AUTHOR_ID, ACTION)
+VALUES
+(1, 'COMMENT', 1, 'X01', 'UPVOTE'),
+(2, 'COMMENT', 1, 'X02', 'DOWNVOTE'),
+(3, 'COMMENT', 1, 'X03', 'UPVOTE'),
+
+(4, 'COMMENT', 2, 'X01', 'UPVOTE'),
+(5, 'COMMENT', 2, 'X02', 'UPVOTE'),
+
+(6, 'CASE', 1000, 'X01', 'DOWNVOTE'),
+(7, 'CASE', 1000, 'X03', 'DOWNVOTE'),
+
+(8, 'SUITE', 2, 'X01', 'UPVOTE'),
+(9, 'SUITE', 2, 'X02', 'UPVOTE'),
+(10, 'SUITE', 2, 'X03', 'UPVOTE'),
+(11, 'SUITE', 2, 'X04', 'DOWNVOTE');
