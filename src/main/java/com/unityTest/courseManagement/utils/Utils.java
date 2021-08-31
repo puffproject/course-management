@@ -1,7 +1,10 @@
 package com.unityTest.courseManagement.utils;
 
 import com.unityTest.courseManagement.models.CourseAttributeName;
+import org.keycloak.adapters.springsecurity.token.KeycloakAuthenticationToken;
+import org.keycloak.representations.AccessToken;
 
+import java.security.Principal;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.IntStream;
@@ -31,5 +34,19 @@ public class Utils {
 			}
 		}
 		return value;
+	}
+
+	public static AccessToken getAuthToken(Principal principal) {
+		// Get the author id from the auth token
+		KeycloakAuthenticationToken keycloakAuthenticationToken = (KeycloakAuthenticationToken) principal;
+		return keycloakAuthenticationToken.getAccount().getKeycloakSecurityContext().getToken();
+	}
+
+	public static boolean isAdminUser(AccessToken accessToken) {
+		return accessToken.getRealmAccess().getRoles().contains("admin");
+	}
+
+	public static boolean isAuthorOrAdmin(AccessToken accessToken, String authorId) {
+		return authorId.equals(accessToken.getSubject()) || isAdminUser(accessToken);
 	}
 }
