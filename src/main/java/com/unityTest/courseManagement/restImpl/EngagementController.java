@@ -37,6 +37,7 @@ public class EngagementController implements EngagementApi {
 	@Autowired
 	private VoteService voteService;
 
+<<<<<<< HEAD
 	@Autowired
 	private CommentService commentService;
 
@@ -48,6 +49,30 @@ public class EngagementController implements EngagementApi {
 		voteService.saveOrUpdateVote(vote);
 		// Also need to synchronize the upvote count across the platform depending on source type
 		voteService.updateVoteCountForSourceItem(sourceType, sourceItemId);
+=======
+	@Override
+	public void voteOnSourceItem(
+			Principal principal,
+			SourceType sourceType,
+			Integer sourceItemId,
+			VoteActionOptions action) {
+		String authorId = Utils.getAuthToken(principal).getSubject();
+		switch (action) {
+			case NOVOTE:
+				voteService.removeVote(sourceType, sourceItemId, authorId);
+				return;
+			case UPVOTE:
+			case DOWNVOTE:
+				voteService
+					.saveOrUpdateVote(
+						new Vote(
+								0, sourceType, sourceItemId, authorId,
+								Utils.parseToEnum(action.toString(), VoteAction.class)));
+				return;
+			default:
+				throw new UnsupportedVoteActionException(action.toString());
+		}
+>>>>>>> 84729ea... Implement vote endpoint for api
 	}
 
 	@Override
@@ -56,6 +81,7 @@ public class EngagementController implements EngagementApi {
 			SourceType sourceType,
 			Integer sourceItemId,
 			@Valid CommentBody commentBody) {
+<<<<<<< HEAD
 		if (sourceType != SourceType.CASE)
 			throw new UnsupportedActionException(String.format("Comments are not supported for %s", sourceType));
 
@@ -66,16 +92,24 @@ public class EngagementController implements EngagementApi {
 		Comment savedComment = commentService.saveComment(commentToPost);
 		// Call api to update comment count for cases
 		return new ResponseEntity<>(new CommentView(savedComment, Author.of(token)), HttpStatus.CREATED);
+=======
+		return null;
+>>>>>>> 84729ea... Implement vote endpoint for api
 	}
 
 	@Override
 	public ResponseEntity<CommentPage> getCommentsOnSourceItem(
 			Pageable pageable,
 			SourceType sourceType,
+<<<<<<< HEAD
 			Integer sourceItemId,
 			String authorId) {
 		Page<Comment> commentPage = commentService.getComments(pageable, sourceType, sourceItemId, authorId, null);
 		return new ResponseEntity<>(new CommentPage(commentService.toCommentViewPage(commentPage)), HttpStatus.OK);
+=======
+			Integer sourceItemId) {
+		return null;
+>>>>>>> 84729ea... Implement vote endpoint for api
 	}
 
 	@Override
@@ -85,6 +119,7 @@ public class EngagementController implements EngagementApi {
 			Integer sourceItemId,
 			Integer commentId,
 			@Valid CommentBody commentBody) {
+<<<<<<< HEAD
 		Iterator<Comment> iter = commentService.getComments(sourceType, sourceItemId, null, commentId).iterator();
 		if (!iter.hasNext())
 			throw new ElementNotFoundException(
@@ -100,6 +135,9 @@ public class EngagementController implements EngagementApi {
 				new CommentView(
 						commentService.updateCommentBody(commentToUpdate, commentBody.getContent()), Author.of(token)),
 				HttpStatus.OK);
+=======
+		return null;
+>>>>>>> 84729ea... Implement vote endpoint for api
 	}
 
 	@Override
@@ -108,6 +146,7 @@ public class EngagementController implements EngagementApi {
 			SourceType sourceType,
 			Integer sourceItemId,
 			Integer commentId) {
+<<<<<<< HEAD
 		Iterator<Comment> iter = commentService.getComments(sourceType, sourceItemId, null, commentId).iterator();
 		if (!iter.hasNext())
 			throw new ElementNotFoundException(
@@ -120,3 +159,8 @@ public class EngagementController implements EngagementApi {
 		commentService.deleteComment(commentToDelete);
 	}
 }
+=======
+
+	}
+}
+>>>>>>> 84729ea... Implement vote endpoint for api
