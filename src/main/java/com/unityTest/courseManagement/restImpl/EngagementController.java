@@ -69,11 +69,9 @@ public class EngagementController implements EngagementApi {
 				return;
 			case UPVOTE:
 			case DOWNVOTE:
-				voteService
-					.saveOrUpdateVote(
-						new Vote(
-								0, sourceType, sourceItemId, authorId,
-								Utils.parseToEnum(action.toString(), VoteAction.class)));
+				Vote vote = new Vote(
+						0, sourceType, sourceItemId, authorId, Utils.parseToEnum(action.toString(), VoteAction.class));
+				voteService.saveOrUpdateVote(vote);
 				return;
 			default:
 				throw new UnsupportedVoteActionException(action.toString());
