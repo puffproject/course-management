@@ -104,7 +104,7 @@ public class EngagementController implements EngagementApi {
 >>>>>>> 4934cdd... Implement comment endpoints using comment service
 =======
 		if (sourceType != SourceType.CASE)
-			throw new UnsupportedActionException(String.format("Comment are not supported for %s", sourceType));
+			throw new UnsupportedActionException(String.format("Comments are not supported for %s", sourceType));
 
 >>>>>>> 8f4614b... Update controller for comments
 		AccessToken token = Utils.getAuthToken(principal);
