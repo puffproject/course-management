@@ -5,9 +5,8 @@ import com.unityTest.courseManagement.entity.SourceType;
 import com.unityTest.courseManagement.entity.Vote;
 import com.unityTest.courseManagement.entity.VoteAction;
 import com.unityTest.courseManagement.exception.ElementNotFoundException;
-import com.unityTest.courseManagement.exception.UnsupportedVoteActionException;
+import com.unityTest.courseManagement.exception.UnsupportedActionException;
 import com.unityTest.courseManagement.models.api.request.CommentBody;
-import com.unityTest.courseManagement.models.api.request.VoteActionOptions;
 import com.unityTest.courseManagement.models.api.response.Author;
 import com.unityTest.courseManagement.models.api.response.CommentView;
 import com.unityTest.courseManagement.models.api.response.page.CommentPage;
@@ -42,25 +41,13 @@ public class EngagementController implements EngagementApi {
 	private CommentService commentService;
 
 	@Override
-	public void voteOnSourceItem(
-			Principal principal,
-			SourceType sourceType,
-			Integer sourceItemId,
-			VoteActionOptions action) {
+	public void voteOnSourceItem(Principal principal, SourceType sourceType, Integer sourceItemId, VoteAction action) {
 		String authorId = Utils.getAuthToken(principal).getSubject();
-		switch (action) {
-			case NOVOTE:
-				voteService.removeVote(sourceType, sourceItemId, authorId);
-				return;
-			case UPVOTE:
-			case DOWNVOTE:
-				Vote vote = new Vote(
-						0, sourceType, sourceItemId, authorId, Utils.parseToEnum(action.toString(), VoteAction.class));
-				voteService.saveOrUpdateVote(vote);
-				return;
-			default:
-				throw new UnsupportedVoteActionException(action.toString());
-		}
+		Vote vote =
+			new Vote(0, sourceType, sourceItemId, authorId, Utils.parseToEnum(action.toString(), VoteAction.class));
+		voteService.saveOrUpdateVote(vote);
+		// Also need to synchronize the upvote count across the platform depending on source type
+		voteService.updateVoteCountForSourceItem(sourceType, sourceItemId);
 	}
 
 	@Override
@@ -69,12 +56,16 @@ public class EngagementController implements EngagementApi {
 			SourceType sourceType,
 			Integer sourceItemId,
 			@Valid CommentBody commentBody) {
+		if (sourceType != SourceType.CASE)
+			throw new UnsupportedActionException(String.format("Comment are not supported for %s", sourceType));
+
 		AccessToken token = Utils.getAuthToken(principal);
 		String authorId = token.getSubject();
 		Comment commentToPost =
 			new Comment(0, sourceType, sourceItemId, authorId, commentBody.getContent(), new Date(), null, 0);
-		return new ResponseEntity<>(
-				new CommentView(commentService.saveComment(commentToPost), Author.of(token)), HttpStatus.CREATED);
+		Comment savedComment = commentService.saveComment(commentToPost);
+		// Call api to update comment count for cases
+		return new ResponseEntity<>(new CommentView(savedComment, Author.of(token)), HttpStatus.CREATED);
 	}
 
 	@Override
