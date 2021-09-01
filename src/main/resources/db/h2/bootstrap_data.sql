@@ -23,3 +23,12 @@ VALUES
 
 (9, 3, 'professorName', 'Curtis D''Alves'),
 (10, 3, 'title', 'Practice and Expertise');
+
+INSERT INTO ASSIGNMENT (ID, COURSE_ID, NAME, DUE_DATE)
+VALUES
+(1, 1, 'Haskell Basics', CALL PARSEDATETIME('01-09-2021 23:59:59', 'dd-MM-YYYY HH:mm:ss', 'en', 'EST'))
+
+INSERT INTO ASSIGNMENT_ATTR (ID, ASSIGNMENT_ID, ATTR_NAME, ATTR_VALUE)
+VALUES
+(1, 1, 'description', 'this assignment is about types and loops.')
+(1, 1, 'weight', '5%')
