@@ -1,8 +1,8 @@
 package com.unityTest.courseManagement.restApi;
 
 import com.unityTest.courseManagement.entity.SourceType;
+import com.unityTest.courseManagement.entity.VoteAction;
 import com.unityTest.courseManagement.models.api.request.CommentBody;
-import com.unityTest.courseManagement.models.api.request.VoteActionOptions;
 import com.unityTest.courseManagement.models.api.response.CommentView;
 import com.unityTest.courseManagement.models.api.response.page.CommentPage;
 import io.swagger.annotations.*;
@@ -34,7 +34,7 @@ public interface EngagementApi extends BaseApi {
 			@PathVariable(value = "sourceType") SourceType sourceType,
 			@ApiParam(value = "Id of source item", required = true)
 			@PathVariable(value = "sourceItemId") Integer sourceItemId,
-			@ApiParam(value = "Vote action", required = true) @RequestParam(value = "action") VoteActionOptions action);
+			@ApiParam(value = "Vote action", required = true) @RequestParam(value = "action") VoteAction action);
 
 	/**
 	 * POST endpoint to add a comment under a source item
