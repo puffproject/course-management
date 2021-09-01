@@ -1,8 +1,6 @@
 package com.unityTest.courseManagement.service;
 
-import com.unityTest.courseManagement.entity.SourceType;
 import com.unityTest.courseManagement.entity.Vote;
-import com.unityTest.courseManagement.entity.VoteAction;
 import com.unityTest.courseManagement.entity.Vote_;
 import com.unityTest.courseManagement.repository.VoteRepository;
 import com.unityTest.courseManagement.utils.specification.AndSpecification;
