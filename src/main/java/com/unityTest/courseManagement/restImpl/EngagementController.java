@@ -44,6 +44,7 @@ public class EngagementController implements EngagementApi {
 
 	@Override
 	public void voteOnSourceItem(Principal principal, SourceType sourceType, Integer sourceItemId, VoteAction action) {
+<<<<<<< HEAD
 		String authorId = Utils.getAuthToken(principal).getSubject();
 		Vote vote =
 			new Vote(0, sourceType, sourceItemId, authorId, Utils.parseToEnum(action.toString(), VoteAction.class));
@@ -77,6 +78,14 @@ public class EngagementController implements EngagementApi {
 				throw new UnsupportedVoteActionException(action.toString());
 		}
 >>>>>>> 84729ea... Implement vote endpoint for api
+=======
+		String authorId = Utils.getAuthToken(principal).getSubject();
+		Vote vote =
+			new Vote(0, sourceType, sourceItemId, authorId, Utils.parseToEnum(action.toString(), VoteAction.class));
+		voteService.saveOrUpdateVote(vote);
+		// Also need to synchronize the upvote count across the platform depending on source type
+		voteService.updateVoteCountForSourceItem(sourceType, sourceItemId);
+>>>>>>> 8f4614b... Update controller for comments
 	}
 
 	@Override
@@ -87,15 +96,22 @@ public class EngagementController implements EngagementApi {
 			@Valid CommentBody commentBody) {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 		if (sourceType != SourceType.CASE)
 			throw new UnsupportedActionException(String.format("Comments are not supported for %s", sourceType));
 
 =======
 >>>>>>> 4934cdd... Implement comment endpoints using comment service
+=======
+		if (sourceType != SourceType.CASE)
+			throw new UnsupportedActionException(String.format("Comment are not supported for %s", sourceType));
+
+>>>>>>> 8f4614b... Update controller for comments
 		AccessToken token = Utils.getAuthToken(principal);
 		String authorId = token.getSubject();
 		Comment commentToPost =
 			new Comment(0, sourceType, sourceItemId, authorId, commentBody.getContent(), new Date(), null, 0);
+<<<<<<< HEAD
 <<<<<<< HEAD
 		Comment savedComment = commentService.saveComment(commentToPost);
 		// Call api to update comment count for cases
@@ -107,6 +123,11 @@ public class EngagementController implements EngagementApi {
 		return new ResponseEntity<>(
 				new CommentView(commentService.saveComment(commentToPost), Author.of(token)), HttpStatus.CREATED);
 >>>>>>> 4934cdd... Implement comment endpoints using comment service
+=======
+		Comment savedComment = commentService.saveComment(commentToPost);
+		// Call api to update comment count for cases
+		return new ResponseEntity<>(new CommentView(savedComment, Author.of(token)), HttpStatus.CREATED);
+>>>>>>> 8f4614b... Update controller for comments
 	}
 
 	@Override

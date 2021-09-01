@@ -1,5 +1,6 @@
 package com.unityTest.courseManagement.repository;
 
+import com.unityTest.courseManagement.entity.SourceType;
 import com.unityTest.courseManagement.entity.Vote;
 import com.unityTest.courseManagement.entity.VoteAction;
 import org.springframework.data.jpa.repository.JpaRepository;
