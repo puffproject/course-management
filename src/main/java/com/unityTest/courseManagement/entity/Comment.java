@@ -56,7 +56,7 @@ public class Comment {
 	@Column(name = "CREATED")
 	private Date created;
 
-	// True if the comment has been edited
+	// Date last edited. Null if never edited
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "LAST_EDITED")
 	private Date lastEdited;

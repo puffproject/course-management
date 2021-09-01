@@ -29,28 +29,15 @@ public class VoteService {
 	 * @return Created or updated vote
 	 */
 	public Vote saveOrUpdateVote(Vote voteToSaveOrUpdate) {
-		Optional<Vote> existingVote = findExistingVote(
-			voteToSaveOrUpdate.getSourceType(), voteToSaveOrUpdate.getSourceItemId(), voteToSaveOrUpdate.getAuthorId());
-		voteToSaveOrUpdate.setId(existingVote.map(Vote::getId).orElse(0));
-		return voteRepository.save(voteToSaveOrUpdate);
-	}
-
-	/**
-	 * Check if a user has made a vote on a source item
-	 * 
-	 * @param sourceType SourceType of source item to check
-	 * @param sourceItemId Id of source item to check
-	 * @param authorId Id of author who might have voted
-	 * @return Optional vote, containing the vote the author may have made
-	 */
-	public Optional<Vote> findExistingVote(SourceType sourceType, Integer sourceItemId, String authorId) {
 		// Need to check if vote matching unique constraints already exists
 		Specification<Vote> spec = new AndSpecification<Vote>()
-			.equal(sourceType, Vote_.SOURCE_TYPE)
-			.equal(sourceItemId, Vote_.SOURCE_ITEM_ID)
-			.equal(authorId, Vote_.AUTHOR_ID)
+			.equal(voteToSaveOrUpdate.getSourceType(), Vote_.SOURCE_TYPE)
+			.equal(voteToSaveOrUpdate.getSourceItemId(), Vote_.SOURCE_ITEM_ID)
+			.equal(voteToSaveOrUpdate.getAuthorId(), Vote_.AUTHOR_ID)
 			.getSpec();
-		return voteRepository.findOne(spec);
+		Optional<Vote> existingVote = voteRepository.findOne(spec);
+		voteToSaveOrUpdate.setId(existingVote.map(Vote::getId).orElse(0));
+		return voteRepository.save(voteToSaveOrUpdate);
 	}
 
 	/**
