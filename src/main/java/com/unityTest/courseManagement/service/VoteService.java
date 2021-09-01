@@ -2,6 +2,7 @@ package com.unityTest.courseManagement.service;
 
 import com.unityTest.courseManagement.entity.SourceType;
 import com.unityTest.courseManagement.entity.Vote;
+import com.unityTest.courseManagement.entity.VoteAction;
 import com.unityTest.courseManagement.entity.Vote_;
 import com.unityTest.courseManagement.repository.VoteRepository;
 import com.unityTest.courseManagement.utils.specification.AndSpecification;
@@ -16,6 +17,9 @@ public class VoteService {
 
 	@Autowired
 	private VoteRepository voteRepository;
+
+	@Autowired
+	private CommentService commentService;
 
 	/**
 	 * Save a new Vote to the repository, or update an existing Vote to respect the unique constraints
@@ -47,5 +51,32 @@ public class VoteService {
 			.equal(authorId, Vote_.AUTHOR_ID)
 			.getSpec();
 		return voteRepository.findOne(spec);
+	}
+
+	/**
+	 * Update the target source item with an updated vote count. Need to keep tables updated with counts
+	 * so queries can sort by upvotes.
+	 * 
+	 * @param sourceType SourceType of target source item
+	 * @param sourceItemId Source item id
+	 */
+	public void updateVoteCountForSourceItem(SourceType sourceType, Integer sourceItemId) {
+		int upvotes =
+			voteRepository.countBySourceTypeAndSourceItemIdAndAction(sourceType, sourceItemId, VoteAction.UPVOTE);
+		int downvotes =
+			voteRepository.countBySourceTypeAndSourceItemIdAndAction(sourceType, sourceItemId, VoteAction.DOWNVOTE);
+		int upvoteCount = upvotes - downvotes;
+
+		switch (sourceType) {
+			case COMMENT:
+				commentService.updateCommentWithVoteCount(sourceItemId, upvoteCount);
+				return;
+			case CASE:
+				// Call api
+				return;
+			case SUITE:
+				// Call api
+				return;
+		}
 	}
 }
