@@ -57,7 +57,7 @@ public class EngagementController implements EngagementApi {
 			Integer sourceItemId,
 			@Valid CommentBody commentBody) {
 		if (sourceType != SourceType.CASE)
-			throw new UnsupportedActionException(String.format("Comment are not supported for %s", sourceType));
+			throw new UnsupportedActionException(String.format("Comments are not supported for %s", sourceType));
 
 		AccessToken token = Utils.getAuthToken(principal);
 		String authorId = token.getSubject();
