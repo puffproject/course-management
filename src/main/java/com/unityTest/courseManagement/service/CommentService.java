@@ -1,8 +1,7 @@
 package com.unityTest.courseManagement.service;
 
-import com.unityTest.courseManagement.entity.Comment;
-import com.unityTest.courseManagement.entity.Comment_;
-import com.unityTest.courseManagement.entity.SourceType;
+import com.unityTest.courseManagement.entity.*;
+import com.unityTest.courseManagement.exception.ElementNotFoundException;
 import com.unityTest.courseManagement.models.api.response.Author;
 import com.unityTest.courseManagement.models.api.response.CommentView;
 import com.unityTest.courseManagement.repository.CommentRepository;
@@ -16,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -27,6 +27,9 @@ public class CommentService {
 	@Autowired
 	private KeycloakService keycloakService;
 
+	@Autowired
+	private VoteService voteService;
+
 	/**
 	 * Save a comment to the repository and update any comment counts across the platform.
 	 * 
@@ -34,9 +37,7 @@ public class CommentService {
 	 * @return Saved comment
 	 */
 	public Comment saveComment(Comment commentToSave) {
-		Comment savedComment = commentRepository.save(commentToSave);
-		// TODO call api to update database
-		return savedComment;
+		return commentRepository.save(commentToSave);
 	}
 
 	/**
@@ -113,5 +114,26 @@ public class CommentService {
 		commentToDelete.setContent("[deleted]");
 		commentToDelete.setAuthorId("");
 		commentRepository.save(commentToDelete);
+	}
+
+	public void updateCommentWithVote(Integer commentId, String authorId, VoteAction action) {
+		Optional<Comment> existingComment = commentRepository.findById(commentId);
+
+		if (!existingComment.isPresent())
+			throw new ElementNotFoundException(Comment.class, "id", String.valueOf(commentId));
+
+		// Need to check if vote already exists. It will modify the difference to add to the count
+		Optional<Vote> existingVote = voteService.findExistingVote(SourceType.COMMENT, commentId, authorId);
+
+		int coefficient = 1;
+		if (existingVote.isPresent()) {
+			VoteAction votedAction = existingVote.get().getAction();
+			// Double the change in count since switching from upvote to downvote or vice versa is +2/-2
+			coefficient = votedAction != action ? 2 : 0;
+		}
+		Comment commentToVoteOn = existingComment.get();
+		int delta = action == VoteAction.UPVOTE ? 1 : -1;
+		commentToVoteOn.setUpvoteCount(commentToVoteOn.getUpvoteCount() + delta * coefficient);
+		saveComment(commentToVoteOn);
 	}
 }
