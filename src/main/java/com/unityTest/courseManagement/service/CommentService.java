@@ -116,24 +116,19 @@ public class CommentService {
 		commentRepository.save(commentToDelete);
 	}
 
-	public void updateCommentWithVote(Integer commentId, String authorId, VoteAction action) {
+	/**
+	 * Update a comment with a new upvote count
+	 * 
+	 * @param commentId Id of comment to update
+	 * @param upvoteCount New upvote count to assign to comment
+	 */
+	public void updateCommentWithVoteCount(Integer commentId, int upvoteCount) {
 		Optional<Comment> existingComment = commentRepository.findById(commentId);
 
 		if (!existingComment.isPresent())
 			throw new ElementNotFoundException(Comment.class, "id", String.valueOf(commentId));
-
-		// Need to check if vote already exists. It will modify the difference to add to the count
-		Optional<Vote> existingVote = voteService.findExistingVote(SourceType.COMMENT, commentId, authorId);
-
-		int coefficient = 1;
-		if (existingVote.isPresent()) {
-			VoteAction votedAction = existingVote.get().getAction();
-			// Double the change in count since switching from upvote to downvote or vice versa is +2/-2
-			coefficient = votedAction != action ? 2 : 0;
-		}
-		Comment commentToVoteOn = existingComment.get();
-		int delta = action == VoteAction.UPVOTE ? 1 : -1;
-		commentToVoteOn.setUpvoteCount(commentToVoteOn.getUpvoteCount() + delta * coefficient);
-		saveComment(commentToVoteOn);
+		Comment commentToUpdate = existingComment.get();
+		commentToUpdate.setUpvoteCount(upvoteCount);
+		saveComment(commentToUpdate);
 	}
 }
