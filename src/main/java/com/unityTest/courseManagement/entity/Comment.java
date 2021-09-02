@@ -3,10 +3,12 @@ package com.unityTest.courseManagement.entity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.Date;
 
 /**
  * Models a comment on a source item
@@ -50,9 +52,14 @@ public class Comment {
 	@Column(name = "CONTENT")
 	private String content;
 
-	// True if the comment has been edited
-	@Column(name = "EDITED")
-	private boolean isEdited = false;
+	@CreationTimestamp
+	@Column(name = "CREATED")
+	private Date created;
+
+	// Date last edited. Null if never edited
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "LAST_EDITED")
+	private Date lastEdited;
 
 	// Upvote/downvote count on comment
 	@Column(name = "UPVOTE_COUNT")
