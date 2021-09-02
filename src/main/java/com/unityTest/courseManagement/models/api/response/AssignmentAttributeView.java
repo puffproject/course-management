@@ -28,9 +28,14 @@ public class AssignmentAttributeView {
     @ApiModelProperty(value = "Assignment URL link", example = "http://www.cas.mcmaster.ca/~cs2c03/2020/as1-2020full.pdf")
     private String url;
 
+    @ApiModelProperty(value = "Assignment due date", example = "2021-09-01 11:59 PM")
+    private String dueDate;
+
+
     // Assignment attribute view constructor
     // Build an AssignmentAttributeView from a list of AssignmentAttributes
     public AssignmentAttributeView(List<AssignmentAttribute> attributes) {
+        String errorMsg = "Failed to find field %s with error %s.";
         for (AssignmentAttribute attribute : attributes) {
             try {
                 Field field = AssignmentAttributeView.class.getDeclaredField(attribute.getName().toString());

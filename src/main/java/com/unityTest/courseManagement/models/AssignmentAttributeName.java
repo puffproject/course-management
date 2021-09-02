@@ -6,5 +6,6 @@ package com.unityTest.courseManagement.models;
 public enum AssignmentAttributeName {
 	description,
 	weight,
-	url
+	url,
+	dueDate
 }
