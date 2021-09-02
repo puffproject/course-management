@@ -9,7 +9,7 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 @Data
-public class BasePage<T> {
+public abstract class BasePage<T> {
 
 	@Data
 	@ApiModel(value = "PageInfo", description = "Provides details about the page returned")
