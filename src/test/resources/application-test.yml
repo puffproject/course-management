@@ -35,10 +35,6 @@ keycloak:
   realm:
   auth-server-url:
 
-service-account:
-  client-id:
-  client-secret:
-
 swagger:
   auth:
     token-url:
