@@ -1,8 +1,11 @@
 package com.unityTest.courseManagement;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.unityTest.courseManagement.constants.ExceptionMsg;
 import com.unityTest.courseManagement.exception.ElementNotFoundException;
 import com.unityTest.courseManagement.models.error.ApiError;
+import feign.FeignException;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -249,9 +252,37 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 		return buildResponseEntity(error);
 	}
 
+	/**
+	 * Handle FeignException. Thrown when an api call made by a FeignClient returns a non 2xx response
+	 * code.
+	 * 
+	 * @param ex FeignException
+	 * @param request HttpServletRequest
+	 * @return ApiError object returned from the FeignClient api call
+	 * @throws JsonProcessingException if the error response cannot be parsed
+	 */
+	@ExceptionHandler(FeignException.class)
+	protected ResponseEntity<Object> handleFeignStatusException(FeignException ex, HttpServletRequest request)
+			throws JsonProcessingException {
+		// Forward the error response received from the FeignClient
+		ApiError error = new ObjectMapper().readValue(ex.contentUTF8(), ApiError.class);
+		return buildResponseEntity(error);
+	}
+
+	/**
+	 * Handle any uncaught exceptions for which there is no handler.
+	 * 
+	 * @param ex Exception caught
+	 * @param request HttpServletRequest
+	 * @return ApiError object as response with 500 status code
+	 */
+	@ExceptionHandler(Exception.class)
+	protected ResponseEntity<Object> handleAllOtherException(Exception ex, HttpServletRequest request) {
+		ApiError error = new ApiError(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage(), ex, request);
+		return buildResponseEntity(error);
+	}
 
 	private ResponseEntity<Object> buildResponseEntity(ApiError apiError) {
 		return new ResponseEntity<>(apiError, apiError.getStatus());
 	}
-
 }

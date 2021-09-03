@@ -1,6 +1,10 @@
 package com.unityTest.courseManagement.models.error;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -24,8 +28,9 @@ import java.util.List;
 @ApiModel(value = "ApiError", description = "REST Api Error")
 public class ApiError {
 
+	@JsonDeserialize(using = LocalDateTimeDeserializer.class)
 	@ApiModelProperty(example = "2020-12-19T01:00:26")
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'hh:mm:ss")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS[xxx]")
 	private LocalDateTime timestamp;
 
 	@ApiModelProperty

@@ -1,5 +1,6 @@
 package com.unityTest.courseManagement.service;
 
+import com.unityTest.courseManagement.apiClient.TestRunnerClient;
 import com.unityTest.courseManagement.entity.SourceType;
 import com.unityTest.courseManagement.entity.Vote;
 import com.unityTest.courseManagement.entity.VoteAction;
@@ -20,6 +21,9 @@ public class VoteService {
 
 	@Autowired
 	private CommentService commentService;
+
+	@Autowired
+	private TestRunnerClient testRunnerClient;
 
 	/**
 	 * Save a new Vote to the repository, or update an existing Vote to respect the unique constraints
@@ -57,13 +61,13 @@ public class VoteService {
 		switch (sourceType) {
 			case COMMENT:
 				commentService.updateCommentWithVoteCount(sourceItemId, upvoteCount);
-				return;
+				break;
 			case CASE:
-				// Call api
-				return;
+				testRunnerClient.updateVoteScoreOnTestCase(sourceItemId, upvoteCount);
+				break;
 			case SUITE:
-				// Call api
-				return;
+				testRunnerClient.updateVoteScoreOnTestSuite(sourceItemId, upvoteCount);
+				break;
 		}
 	}
 }

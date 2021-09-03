@@ -18,14 +18,22 @@ spring:
     hibernate:
       ddl-auto: validate
     show-sql: false
+  security.oauth2.client:
+    registration:
+      keycloak:
+        client-id: test
+        client-secret: test
+        authorization-grant-type: client_credentials
+        client-authentication-method: post
+    provider:
+      keycloak:
+        token-uri: xx
+
+api.client.test-runner.url: test
 
 keycloak:
   realm:
   auth-server-url:
-
-service-account:
-  client-id:
-  client-secret:
 
 swagger:
   auth:
