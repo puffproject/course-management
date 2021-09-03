@@ -1,5 +1,6 @@
 package com.unityTest.courseManagement.restImpl;
 
+import com.unityTest.courseManagement.apiClient.TestRunnerClient;
 import com.unityTest.courseManagement.entity.Comment;
 import com.unityTest.courseManagement.entity.SourceType;
 import com.unityTest.courseManagement.entity.Vote;
@@ -41,6 +42,9 @@ public class EngagementController implements EngagementApi {
 <<<<<<< HEAD
 	@Autowired
 	private CommentService commentService;
+
+	@Autowired
+	private TestRunnerClient testRunnerClient;
 
 	@Override
 	public void voteOnSourceItem(Principal principal, SourceType sourceType, Integer sourceItemId, VoteAction action) {
@@ -125,7 +129,7 @@ public class EngagementController implements EngagementApi {
 >>>>>>> 4934cdd... Implement comment endpoints using comment service
 =======
 		Comment savedComment = commentService.saveComment(commentToPost);
-		// Call api to update comment count for cases
+		testRunnerClient.incrementCommentCountOnTestCase(sourceItemId);
 		return new ResponseEntity<>(new CommentView(savedComment, Author.of(token)), HttpStatus.CREATED);
 >>>>>>> 8f4614b... Update controller for comments
 	}
