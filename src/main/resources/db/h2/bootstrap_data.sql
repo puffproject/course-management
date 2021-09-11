@@ -24,18 +24,18 @@ VALUES
 (9, 3, 'professorName', 'Curtis D''Alves'),
 (10, 3, 'title', 'Practice and Expertise');
 
-INSERT INTO ASSIGNMENT (ID, COURSE_ID, NAME, DUE_DATE)
+INSERT INTO ASSIGNMENT (ID, COURSE_ID, NAME)
 VALUES
-(1, 1, 'Haskell Basics')
-(2, 2, 'Discrete math')
+(1, 1, 'Haskell Basics'),
+(2, 2, 'Discrete math');
 
 INSERT INTO ASSIGNMENT_ATTR (ID, ASSIGNMENT_ID, ATTR_NAME, ATTR_VALUE)
 VALUES
-(1, 1, 'description', 'this assignment is about types and loops.')
-(2, 1, 'weight', '5%')
-(3, 1, 'url', 'http://www.cas.mcmaster.ca/~cs2c03/2020/as1-2020full.pdf')
-(4, 1, 'dueDate', '2021-09-01 11:59 PM')
-(5, 2, 'description', 'an assignment about symbols and whatever')
-(6, 2, 'weight', '0.1%')
-(7, 2, 'url', 'https://www.cas.mcmaster.ca/~kahl/CS2DM3/2020/2DM3-2020-Outline.pdf')
-(8, 2, 'dueDate', '2021-09-05 11:59 AM')
+(1, 1, 'description', 'this assignment is about types and loops.'),
+(2, 1, 'weight', '5%'),
+(3, 1, 'url', 'http://www.cas.mcmaster.ca/~cs2c03/2020/as1-2020full.pdf'),
+(4, 1, 'dueDate', '2021-09-01 11:59 PM'),
+(5, 2, 'description', 'an assignment about symbols and whatever'),
+(6, 2, 'weight', '0.1%'),
+(7, 2, 'url', 'https://www.cas.mcmaster.ca/~kahl/CS2DM3/2020/2DM3-2020-Outline.pdf'),
+(8, 2, 'dueDate', '2021-09-05 11:59 AM');

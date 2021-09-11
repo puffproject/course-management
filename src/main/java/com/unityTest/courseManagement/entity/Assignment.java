@@ -46,11 +46,5 @@ public class Assignment {
 	@NotBlank
 	@Column(name = "NAME")
 	private String name;
-
-	// Due date
-//	@ApiModelProperty(value = "Due date", required = true)
-//	@Column(name = "DUE_DATE", columnDefinition = "DATE")
-//	private Date date;
-
 }
 

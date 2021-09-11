@@ -19,36 +19,33 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 public class AssignmentAttributeView {
-    @ApiModelProperty(value = "Assignment description", example = "Assignment 1 about intro to Java basics.")
-    private String description;
-    
-    @ApiModelProperty(value = "Assignment weight", example = "5%")
-    private String weight;
+	@ApiModelProperty(value = "Assignment description", example = "Assignment 1 about intro to Java basics.")
+	private String description;
 
-    @ApiModelProperty(value = "Assignment URL link", example = "http://www.cas.mcmaster.ca/~cs2c03/2020/as1-2020full.pdf")
-    private String url;
+	@ApiModelProperty(value = "Assignment weight", example = "5%")
+	private String weight;
 
-    @ApiModelProperty(value = "Assignment due date", example = "2021-09-01 11:59 PM")
-    private String dueDate;
+	@ApiModelProperty(
+		value = "Assignment URL link",
+		example = "http://www.cas.mcmaster.ca/~cs2c03/2020/as1-2020full.pdf")
+	private String url;
+
+	@ApiModelProperty(value = "Assignment due date", example = "2021-09-01 11:59 PM")
+	private String dueDate;
 
 
-    // Assignment attribute view constructor
-    // Build an AssignmentAttributeView from a list of AssignmentAttributes
-    public AssignmentAttributeView(List<AssignmentAttribute> attributes) {
-        String errorMsg = "Failed to find field %s with error %s.";
-        for (AssignmentAttribute attribute : attributes) {
-            try {
-                Field field = AssignmentAttributeView.class.getDeclaredField(attribute.getName().toString());
-                field.set(this, attribute.getValue());
-            } catch (NoSuchFieldException | IllegalAccessException e) {
-                log
-                        .error(
-                                String
-                                        .format(
-                                                "Failed to find field %s with error %s.", attribute.getName().toString(),
-                                                e.getLocalizedMessage()));
-            }
-        }
-    }
+	// Assignment attribute view constructor
+	// Build an AssignmentAttributeView from a list of AssignmentAttributes
+	public AssignmentAttributeView(List<AssignmentAttribute> attributes) {
+		for (AssignmentAttribute attribute : attributes) {
+			try {
+				Field field = AssignmentAttributeView.class.getDeclaredField(attribute.getName().toString());
+				field.set(this, attribute.getValue());
+			} catch (NoSuchFieldException | IllegalAccessException e) {
+				String errMsg = "Failed to find field %s with error %s.";
+				log.error(String.format(errMsg, attribute.getName().toString(), e.getLocalizedMessage()));
 
+			}
+		}
+	}
 }
