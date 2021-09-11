@@ -96,7 +96,7 @@ You can also add the git hook in `.hooks` to your local `.git/hooks` folder to r
 
 ## Contributors
 The _Puff_ project is looking for contributors to join the initiative!
-For information about progress, features under construction and opportunities to contribute see [our project board](https://github.com/benjaminkostiuk/unity-test/projects/1).
+For information about progress, features under construction and opportunities to contribute see [our project board](https://github.com/orgs/puffproject/projects/1).
 
 
 If you're interested in helping please read our [CONTRIBUTING.md](./CONTRIBUTING.md) for details like our Code of Conduct and contact [Benjamin Kostiuk](mailto:benkostiuk1@gmail.com) for more information.

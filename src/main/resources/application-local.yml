@@ -26,6 +26,20 @@ spring:
     hibernate:
       ddl-auto: validate
     show-sql: true
+  security.oauth2.client:
+    registration:
+      keycloak:
+        client-id: puff-service-acc
+        client-secret: 6d29c988-5da1-4528-9058-c288f0434e89
+        authorization-grant-type: client_credentials
+        client-authentication-method: post
+    provider:
+      keycloak:
+        token-uri: http://localhost:8180/auth/realms/puff/protocol/openid-connect/token
+
+api.client:
+  test-runner:
+    url: http://localhost:8083
 
 swagger:
   auth:
