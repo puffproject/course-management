@@ -63,3 +63,11 @@ VALUES
 (2, 'CASE', 1000, 'X02', 'How about being positive? :smile:', 0),
 
 (3, 'CASE', 1001, 'X03', 'Should we have done this instead? `x = 3`?', 1);
+
+INSERT INTO ASSIGNMENT_ENROLLMENT (ID, ASSIGNMENT_ID, USER_ID, PINNED)
+VALUES
+(1, 1, 'X01', false),
+(2, 2, 'X02', false),
+(3, 1, 'X02', true),
+(4, 2, 'X01', true),
+(5, 1, 'X03', false);
