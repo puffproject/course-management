@@ -3,7 +3,9 @@ package com.unityTest.courseManagement.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -12,6 +14,8 @@ import javax.persistence.*;
  * Models the enrollment of a user in a course
  */
 @Data
+@RequiredArgsConstructor
+@AllArgsConstructor
 @ApiModel(value = "AssignmentEnrollment", description = "Enrollment of a user in a assignment")
 @Entity
 @Table(name = "ASSIGNMENT_ENROLLMENT")
@@ -19,6 +23,7 @@ public class AssignmentEnrollment {
 
 	@Id
 	@Column(name = "ID")
+	@JsonIgnore
 	@GeneratedValue(generator = "sequence-generator")
 	@GenericGenerator(
 		name = "sequence-generator",
@@ -30,10 +35,10 @@ public class AssignmentEnrollment {
 	private int id;
 
 	// Assignment user is enrolled in
-	// @ApiModelProperty(value = "Enrolled assignment")
-	// @ManyToOne(fetch = FetchType.LAZY)
-	// @JoinColumn(name = "ASSIGNMENT_ID", referencedColumnName = "ID")
-	// private Assignment course;
+	@ApiModelProperty(value = "Enrolled assignment")
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "ASSIGNMENT_ID", referencedColumnName = "ID")
+	private Assignment assignment;
 
 	// User id
 	@JsonIgnore
