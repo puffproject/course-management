@@ -1,3 +1,6 @@
+
+SET @USER_ID = 'TEST_ID';
+
 INSERT INTO COURSE (ID, CODE, LEVEL, TERM, ACADEMIC_YEAR)
 VALUES
 (1, 'COMPSCI 1JC3', 1, 'FALL', 2019),
@@ -70,4 +73,6 @@ VALUES
 (2, 2, 'X02', false),
 (3, 1, 'X02', true),
 (4, 2, 'X01', true),
-(5, 1, 'X03', false);
+(5, 1, 'X03', false),
+(6, 1, @USER_ID, false),
+(7, 2, @USER_ID, true);

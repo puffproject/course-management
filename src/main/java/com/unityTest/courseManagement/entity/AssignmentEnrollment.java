@@ -23,6 +23,7 @@ public class AssignmentEnrollment {
 
 	@Id
 	@Column(name = "ID")
+	@JsonIgnore
 	@GeneratedValue(generator = "sequence-generator")
 	@GenericGenerator(
 		name = "sequence-generator",
@@ -37,7 +38,7 @@ public class AssignmentEnrollment {
 	@ApiModelProperty(value = "Enrolled assignment")
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "ASSIGNMENT_ID", referencedColumnName = "ID")
-	private Assignment course;
+	private Assignment assignment;
 
 	// User id
 	@JsonIgnore
