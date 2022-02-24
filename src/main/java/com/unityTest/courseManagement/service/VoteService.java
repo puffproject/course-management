@@ -1,10 +1,8 @@
 package com.unityTest.courseManagement.service;
 
 import com.unityTest.courseManagement.apiClient.TestRunnerClient;
-import com.unityTest.courseManagement.entity.SourceType;
-import com.unityTest.courseManagement.entity.Vote;
-import com.unityTest.courseManagement.entity.VoteAction;
-import com.unityTest.courseManagement.entity.Vote_;
+import com.unityTest.courseManagement.entity.*;
+import com.unityTest.courseManagement.exception.ElementNotFoundException;
 import com.unityTest.courseManagement.repository.VoteRepository;
 import com.unityTest.courseManagement.utils.specification.AndSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,4 +68,29 @@ public class VoteService {
 				break;
 		}
 	}
+
+	/**
+	 * get the vote action of a user on a target source item. Returns null if no vote is found
+	 *
+	 * @param sourceType SourceType of target source item
+	 * @param sourceItemId Source item id
+	 * @param authorId Id of target user
+	 * @return Vote action of the user, null if vote doesn't exist
+	 */
+	public VoteAction getVoteAction(SourceType sourceType, Integer sourceItemId, String authorId) {
+		Specification<Vote> spec = new AndSpecification<Vote>()
+			.equal(sourceType, Vote_.SOURCE_TYPE)
+			.equal(sourceItemId, Vote_.SOURCE_ITEM_ID)
+			.equal(authorId, Vote_.AUTHOR_ID)
+			.getSpec();
+		Optional<Vote> existingVote = voteRepository.findOne(spec);
+		if (!existingVote.isPresent())
+			return null;
+
+		return existingVote.get().getAction();
+
+	}
+
+
+
 }
