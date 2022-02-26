@@ -12,7 +12,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
-import java.awt.print.Pageable;
+import org.springframework.data.domain.Pageable;
 import java.security.Principal;
 
 @Api(value = "User Management API", tags = "User API", description = "Manage user resources")

@@ -25,17 +25,24 @@ public class UserService {
 	 * get a list of Assignment Enrollments that match the passed arguments
 	 *
 	 * @param id Id of course to fetch
-	 * @param assignment Assignment user is enrolled in
+	 * @param name Assignment name
+	 * @param code Course code
+	 * @param term Course term
+	 * @param academicYear acadamic year of the course
 	 * @param userId User id of the user
 	 * @param isPinned True if user has pinned the course
 	 * @return List of assignment enrollments with fields matching the passed arguments
 	 */
 	public List<AssignmentEnrollment> getAssignmentEnrollments(
 			Integer id,
-			Assignment assignment,
+			String name,
+			String code,
+			String term,
+			Integer academicYear,
 			String userId,
 			Boolean isPinned) {
-		return getAssignmentEnrollments(Pageable.unpaged(), id, assignment, userId, isPinned).getContent();
+		return getAssignmentEnrollments(Pageable.unpaged(), id, name, code, term, academicYear, userId, isPinned)
+			.getContent();
 	}
 
 	/**
@@ -43,7 +50,10 @@ public class UserService {
 	 *
 	 * @param pageable Pageable object specifying page size, sort and index
 	 * @param id Id of course to fetch
-	 * @param assignment Assignment user is enrolled in
+	 * @param name Assignment name
+	 * @param code Course code
+	 * @param term Course term
+	 * @param academicYear acadamic year of the course
 	 * @param userId User id of the user
 	 * @param isPinned True if user has pinned the course
 	 * @return Page view of assignment enrollments from repository matching passed arguments and
@@ -52,12 +62,18 @@ public class UserService {
 	public Page<AssignmentEnrollment> getAssignmentEnrollments(
 			Pageable pageable,
 			Integer id,
-			Assignment assignment,
+			String name,
+			String code,
+			String term,
+			Integer academicYear,
 			String userId,
 			Boolean isPinned) {
 		Specification<AssignmentEnrollment> spec = new AndSpecification<AssignmentEnrollment>()
 			.equal(id, AssignmentEnrollment_.ID)
-			.equal(assignment, AssignmentEnrollment_.ASSIGNMENT)
+			.equal(name, AssignmentEnrollment_.ASSIGNMENT, Assignment_.NAME)
+			.equal(code, AssignmentEnrollment_.ASSIGNMENT, Assignment_.COURSE, Course_.CODE)
+			.equal(term, AssignmentEnrollment_.ASSIGNMENT, Assignment_.COURSE, Course_.TERM)
+			.equal(academicYear, AssignmentEnrollment_.ASSIGNMENT, Assignment_.COURSE, Course_.ACADEMIC_YEAR)
 			.equal(userId, AssignmentEnrollment_.USER_ID)
 			.equal(isPinned, AssignmentEnrollment_.IS_PINNED)
 			.getSpec();
@@ -68,19 +84,24 @@ public class UserService {
 	 * Save a new Vote to the repository, or update an existing Vote to respect the unique constraints
 	 * of the table.
 	 *
-	 * @param enrollment The assignment enrollment
+	 * @param assignment The assignment to enroll into
 	 * @param toPin whether to pin or not the assignment enrollment
 	 * @return Created or updated assignment enrollment
 	 */
-	public AssignmentEnrollment enrollUser(AssignmentEnrollment enrollment, Boolean toPin) {
+	public AssignmentEnrollment enrollUser(String userId, Assignment assignment, Boolean toPin) {
 		// check if there is an AssignmentEnrollment with same user and assignment already exists
 		Specification<AssignmentEnrollment> spec = new AndSpecification<AssignmentEnrollment>()
-			.equal(enrollment.getUserId(), AssignmentEnrollment_.USER_ID)
-			.equal(enrollment.getAssignment(), AssignmentEnrollment_.ASSIGNMENT)
+			.equal(userId, AssignmentEnrollment_.USER_ID)
+			.equal(assignment.getId(), AssignmentEnrollment_.ASSIGNMENT, Assignment_.ID)
 			.getSpec();
 		Optional<AssignmentEnrollment> existingEnrollment = assignmentEnrollmentRepository.findOne(spec);
-		enrollment.setId(existingEnrollment.map(AssignmentEnrollment::getId).orElse(0));
 
+
+		// create assignment enrollment
+		AssignmentEnrollment enrollment = new AssignmentEnrollment();
+		enrollment.setId(existingEnrollment.map(AssignmentEnrollment::getId).orElse(0));
+		enrollment.setAssignment(assignment);
+		enrollment.setUserId(userId);
 		enrollment.setPinned(toPin);
 
 		return assignmentEnrollmentRepository.save(enrollment);
@@ -89,10 +110,20 @@ public class UserService {
 	/**
 	 * Unenroll a user from an assignment
 	 *
-	 * @param id Id of assignment to unenroll from
+	 * @param userId Id of user enrolled
+	 * @param assignmentId Id of assignment to unenroll from
 	 */
-	public void unenrollUser(int id) {
-		assignmentEnrollmentRepository.deleteById(id);
+	public void unenrollUser(String userId, int assignmentId) {
+		Specification<AssignmentEnrollment> spec = new AndSpecification<AssignmentEnrollment>()
+			.equal(userId, AssignmentEnrollment_.USER_ID)
+			.equal(assignmentId, AssignmentEnrollment_.ASSIGNMENT, Assignment_.ID)
+			.getSpec();
+		Optional<AssignmentEnrollment> enrollment = assignmentEnrollmentRepository.findOne(spec);
+
+		if (!enrollment.isPresent())
+			return;
+
+		assignmentEnrollmentRepository.deleteById(enrollment.get().getId());
 	}
 
 
